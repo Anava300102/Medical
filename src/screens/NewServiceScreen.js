@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import appFirebase from '../../credenciales';
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
+
+const db = getFirestore(appFirebase);
 
 export default function NewService({ route, navigation }) {
   const { addService } = route.params; // Recibe la función addService desde la pantalla anterior
@@ -27,22 +31,34 @@ export default function NewService({ route, navigation }) {
     }
   };
 
-  const handleAddService = () => {
-    if (!serviceName || !description || !image) {
-      Alert.alert('Error', 'Por favor completa todos los campos.');
-      return;
+  const handleAddService = async () => {
+    try {
+
+
+      if (!serviceName || !description || !image) {
+        Alert.alert('Error', 'Por favor completa todos los campos.');
+        return;
+      }
+
+      await addDoc(collection(db, 'services'), {
+        name: serviceName,
+        description,
+      });
+
+      // Agregar el nuevo servicio usando la función addService
+      addService({ name: serviceName, description, image });
+
+      Alert.alert('Servicio agregado', 'Tu servicio ha sido agregado exitosamente.');
+
+      // Limpiar los campos
+      setServiceName('');
+      setDescription('');
+      setImage(null);
+      navigation.goBack(); // Regresar a la pantalla de servicios
     }
-
-    // Agregar el nuevo servicio usando la función addService
-    addService({ name: serviceName, description, image });
-
-    Alert.alert('Servicio agregado', 'Tu servicio ha sido agregado exitosamente.');
-
-    // Limpiar los campos
-    setServiceName('');
-    setDescription('');
-    setImage(null);
-    navigation.goBack(); // Regresar a la pantalla de servicios
+    catch {
+      console.error(error)
+    }
   };
 
   return (

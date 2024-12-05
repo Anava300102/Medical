@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert, TextInput } from 'react-native';
+import appFirebase from '../../credenciales';
+import {getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc} from 'firebase/firestore';
+
+const db = getFirestore(appFirebase);
 
 export default function Services({ navigation }) {
   const [services, setServices] = useState([

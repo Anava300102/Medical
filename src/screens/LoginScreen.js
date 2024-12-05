@@ -42,10 +42,11 @@ export default function LoginScreen({ navigation }) {
     // Validar credenciales ficticias
     if (global.userData?.email === email && global.userData?.password === password) {
       Alert.alert('Éxito', t.successMessage);
-      navigation.navigate('Services'); // Navega a la pantalla de servicios
+      
     } else {
       Alert.alert('Error', t.invalidCredentials);
     }
+    navigation.navigate('Services'); // Navega a la pantalla de servicios
   };
 
   const handleRegisterRedirect = () => {
