@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useLanguage } from '../../Context';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [language, setLanguage] = useState('es'); // Idioma predeterminado
+  const { language, changeLanguage } = useLanguage();
 
   const translations = {
     es: {
@@ -61,13 +62,13 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.languageButtons}>
         <TouchableOpacity
           style={[styles.languageButton, language === 'es' && styles.activeLanguageButton]}
-          onPress={() => setLanguage('es')}
+          onPress={() => changeLanguage('es')}
         >
           <Text style={styles.languageButtonText}>ES</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.languageButton, language === 'en' && styles.activeLanguageButton]}
-          onPress={() => setLanguage('en')}
+          onPress={() => changeLanguage('en')}
         >
           <Text style={styles.languageButtonText}>EN</Text>
         </TouchableOpacity>

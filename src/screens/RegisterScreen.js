@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Para los iconos de teléfono y candado
+import { useLanguage } from '../../Context';
 
 export default function RegisterScreen({ navigation }) { // Recibe 'navigation' como prop
   const [name, setName] = useState('');
@@ -9,7 +10,40 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { language, changeLanguage } = useLanguage();
 
+  const translations = {
+    es: {
+      selectImage: 'Selecciona una imagen',
+      title: 'Registro',
+      namePlaceholder: 'Nombre',
+      lastNamePlaceholder: 'Apellido',
+      emailPlaceholder: 'Correo electrónico',
+      phonePlaceholder: 'Teléfono',
+      passwordPlaceholder: 'Contraseña',
+      confirmPasswordPlaceholder: 'Confirmar contraseña',
+      registerButton: 'Registrarse',
+      loginRedirect: '¿Ya tienes una cuenta? Inicia sesión',
+    },
+    en: {
+      selectImage: 'Select an image',
+      title: 'Register',
+      namePlaceholder: 'Name',
+      lastNamePlaceholder: 'Last name',
+      emailPlaceholder: 'Email',
+      phonePlaceholder: 'Phone',
+      passwordPlaceholder: 'Password',
+      confirmPasswordPlaceholder: 'Confirm password',
+      registerButton: 'Register',
+      loginRedirect: 'Already have an account? Log in',
+    }
+  }
+
+
+
+
+
+  const t = translations[language];
   const handleRegister = () => {
     // Validar que todos los campos estén llenos
     if (!name || !lastName || !email || !phone || !password || !confirmPassword) {
