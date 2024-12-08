@@ -70,7 +70,7 @@ export default function NewService({ route, navigation }) {
           <Image source={{ uri: image }} style={styles.image} />
         ) : (
           <Image
-            source={require('../../assets/camara.png')}
+            source={require('../../assets/icons8-cámara-50.png')}
             style={styles.imagePlaceholder}
           />
         )}
