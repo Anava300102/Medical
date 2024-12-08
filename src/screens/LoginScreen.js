@@ -47,7 +47,7 @@ export default function LoginScreen({ navigation }) {
     } else {
       Alert.alert('Error', t.invalidCredentials);
     }
-    navigation.navigate('Services'); // Navega a la pantalla de servicios
+    navigation.navigate('Rol'); // Navega a la pantalla de roles
   };
 
   const handleRegisterRedirect = () => {

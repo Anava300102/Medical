@@ -78,7 +78,7 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
 
     // Si todo está correcto, navegar a la pantalla de servicios
     Alert.alert('Éxito', 'Registro exitoso');
-    navigation.navigate('Services');
+    navigation.navigate('Rol');
   };
 
   const handleLoginRedirect = () => {
