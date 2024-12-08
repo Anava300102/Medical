@@ -79,7 +79,7 @@ export default function LoginScreen({ navigation }) {
     contentContainerStyle={{ flexGrow: 1 }} 
     horizontal={false} 
     keyboardShouldPersistTaps="handled">
-    <View style={styles.container}>
+    <View style={[styles.container, { minHeight: orientation === 'landscape' ? 300 : '100%' }]}>
       {/* Botones para cambiar idioma */}
       <View style={styles.languageButtons}>
         <TouchableOpacity
