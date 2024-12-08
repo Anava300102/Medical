@@ -17,7 +17,7 @@ export default function PharmacyScreen({ navigation }) {
       description:
         'The reduction of bacteroids and inflammation of the intestine, helping to treat irritable colon and prevent atherosclerosis.',
       price: '$1,330',
-      image: require('../../assets/rhabil.jpg'), 
+      image: require('../../assets/profile.png'), 
     },
   ];
 

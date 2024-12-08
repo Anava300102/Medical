@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../../Context';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function LoginScreen({ navigation }) {
+  const [orientation, setOrientation] = useState('portrait');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { language, changeLanguage } = useLanguage();
+
+  useEffect(() => {
+    // Detectar cambios de orientación
+    const orientationSubscription = ScreenOrientation.addOrientationChangeListener((event) => {
+        const orientationType = event.orientationInfo.orientation;
+        setOrientation(
+            orientationType === ScreenOrientation.Orientation.LANDSCAPE
+                ? 'landscape'
+                : 'portrait'
+        );
+    });
+
+    return () => {
+        ScreenOrientation.removeOrientationChangeListener(orientationSubscription);
+    };
+}, []);
 
   const translations = {
     es: {
@@ -57,6 +75,7 @@ export default function LoginScreen({ navigation }) {
   const t = translations[language];
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       {/* Botones para cambiar idioma */}
       <View style={styles.languageButtons}>
@@ -117,6 +136,7 @@ export default function LoginScreen({ navigation }) {
         </View>
       </View>
     </View>
+    </ScrollView>
   );
 }
 
