@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 
 export default function GeneralDoctor({ navigation }) {
+  const [appointments, setAppointments] = useState([]);
+
   const doctors = [
     {
       id: '1',
@@ -9,7 +11,7 @@ export default function GeneralDoctor({ navigation }) {
       phone: '4491633605',
       email: 'alf.ls@gmail.com',
       price: '$400',
-      image: require('../../assets/alfredosandoval.jpeg'), 
+      image: require('../../assets/alfredosandoval.jpeg'),
     },
     {
       id: '2',
@@ -17,12 +19,19 @@ export default function GeneralDoctor({ navigation }) {
       phone: '4491237687',
       email: 'estef.rp@gmail.com',
       price: '$460',
-      image: require('../../assets/estefaniaponce.jpeg'), 
+      image: require('../../assets/estefaniaponce.jpeg'),
     },
   ];
 
+  const handleDoctorSelect = (doctor) => {
+    // Agregar al doctor seleccionado a la lista de citas
+    setAppointments((prevAppointments) => [...prevAppointments, doctor]);
+    // Redirigir a la pantalla de "Appointments/Orders"
+    navigation.navigate('AppointmentsOrders', { appointments: [...appointments, doctor] });
+  };
+
   const renderDoctor = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => handleDoctorSelect(item)}>
       <Image source={item.image} style={styles.doctorImage} />
       <View style={styles.doctorInfo}>
         <Text style={styles.doctorName}>{item.name}</Text>
@@ -30,7 +39,7 @@ export default function GeneralDoctor({ navigation }) {
         <Text style={styles.doctorDetails}>Email: {item.email}</Text>
         <Text style={styles.doctorPrice}>{item.price}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -59,7 +68,7 @@ export default function GeneralDoctor({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('AppointmentsOrders')}
+          onPress={() => navigation.navigate('AppointmentsOrders', { appointments })}
         >
           <Image
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}

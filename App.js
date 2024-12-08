@@ -15,6 +15,7 @@ import PharmacyScreen from './src/screens/PharmacyScreen';
 import GeneralDoctorScreen from './src/screens/GeneralDoctorScreen';
 import SpecialistScreen from './src/screens/SpecialistScreen';
 import ProductsPharmacyScreen from './src/screens/ProductsPharmacyScree';
+import OrdersScreen from './src/screens/OrdersScreen';
 import { LanguageProvider } from './Context';
 import { OrientationProvider } from './OrientationProvider';
 
@@ -41,6 +42,7 @@ export default function App() {
             <Stack.Screen name="GeneralDoctorScreen" component={GeneralDoctorScreen} />
             <Stack.Screen name="SpecialistScreen" component={SpecialistScreen} />
             <Stack.Screen name="ProductsPharmacy" component={ProductsPharmacyScreen} />
+            <Stack.Screen name="AppointmentsOrders" component={OrdersScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </LanguageProvider>

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 
 export default function SpecialistScreen({ navigation }) {
+  const [appointments, setAppointments] = useState([]);
+
   const specialists = [
     {
       id: '1',
@@ -23,8 +25,15 @@ export default function SpecialistScreen({ navigation }) {
     },
   ];
 
+  const handleSpecialistSelect = (specialist) => {
+    // Agregar al especialista seleccionado a la lista de citas
+    setAppointments((prevAppointments) => [...prevAppointments, specialist]);
+    // Redirigir a la pantalla de "Appointments/Orders"
+    navigation.navigate('AppointmentsOrders', { appointments: [...appointments, specialist] });
+  };
+
   const renderSpecialist = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => handleSpecialistSelect(item)}>
       <Image source={item.image} style={styles.specialistImage} />
       <View style={styles.specialistInfo}>
         <Text style={styles.specialistName}>{item.name}</Text>
@@ -36,12 +45,12 @@ export default function SpecialistScreen({ navigation }) {
         ))}
         <Text style={styles.specialistPrice}>{item.price}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      {/* Barra superior sin botones */}
+      {/* Barra superior */}
       <View style={styles.topBar}>
         <Text style={styles.title}>Specialist</Text>
       </View>
@@ -62,7 +71,7 @@ export default function SpecialistScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('AppointmentsOrders')}
+          onPress={() => navigation.navigate('AppointmentsOrders', { appointments })}
         >
           <Image
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
@@ -71,7 +80,10 @@ export default function SpecialistScreen({ navigation }) {
           <Text style={styles.navText}>Appointments/Orders</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
-          <Image source={require('../../assets/icons8-comprobante-de-pago-64.png')} style={styles.navIcon} />
+          <Image
+            source={require('../../assets/icons8-comprobante-de-pago-64.png')}
+            style={styles.navIcon}
+          />
           <Text style={styles.navText}>Datebook</Text>
         </TouchableOpacity>
       </View>
@@ -87,7 +99,7 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', 
+    justifyContent: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',

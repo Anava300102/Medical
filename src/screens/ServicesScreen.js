@@ -8,15 +8,13 @@ export default function Services({ navigation }) {
     { id: 3, name: 'Pharmacy', image: require('../../assets/medicamentos.jpg') },
   ]);
 
-  const [editingService, setEditingService] = useState(null); // Servicio en edición
-  const [editedName, setEditedName] = useState(''); // Nuevo nombre del servicio
+  const [editingService, setEditingService] = useState(null); 
+  const [editedName, setEditedName] = useState(''); 
 
-  // Función para agregar un servicio
   const addService = (newService) => {
     setServices((prevServices) => [...prevServices, { ...newService, id: Date.now() }]);
   };
 
-  // Función para eliminar un servicio
   const deleteService = (id) => {
     Alert.alert(
       'Confirm Delete',
@@ -33,13 +31,11 @@ export default function Services({ navigation }) {
     );
   };
 
-  // Función para activar el modo de edición
   const startEditing = (service) => {
     setEditingService(service.id);
     setEditedName(service.name);
   };
 
-  // Función para guardar los cambios de edición
   const saveEdit = (id) => {
     setServices((prevServices) =>
       prevServices.map((service) =>
@@ -56,7 +52,7 @@ export default function Services({ navigation }) {
         <Text style={styles.title}>Services</Text>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate('NewService', { addService })} // Pasa addService como parámetro
+          onPress={() => navigation.navigate('NewService', { addService })} 
         >
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>

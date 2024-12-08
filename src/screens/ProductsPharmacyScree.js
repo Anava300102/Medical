@@ -14,6 +14,19 @@ export default function ProductsPharmacyScreen({ navigation }) {
     }
   };
 
+  const handleAddToOrder = () => {
+    const product = {
+      id: '1', // Cambia esto por el ID dinámico si hay varios productos
+      name: 'Forxiga',
+      price: 1832,
+      quantity,
+      image: require('../../assets/foxiga.png'),
+    };
+
+    // Navegar a OrdersScreen y pasar el producto
+    navigation.navigate('AppointmentsOrders', { product });
+  };
+
   return (
     <View style={styles.container}>
       {/* Barra superior sin goBack */}
@@ -24,7 +37,7 @@ export default function ProductsPharmacyScreen({ navigation }) {
       {/* Información del producto */}
       <View style={styles.productContainer}>
         <Image
-          source={require('../../assets/foxiga.png')} // Reemplaza con la ruta correcta de la imagen
+          source={require('../../assets/foxiga.png')}
           style={styles.productImage}
         />
         <Text style={styles.productTitle}>Forxiga</Text>
@@ -54,7 +67,7 @@ export default function ProductsPharmacyScreen({ navigation }) {
             <Text style={styles.quantityButtonText}>+</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={handleAddToOrder}>
           <Text style={styles.addButtonText}>Add to order</Text>
         </TouchableOpacity>
       </View>
