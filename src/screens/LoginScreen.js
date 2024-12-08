@@ -75,7 +75,10 @@ export default function LoginScreen({ navigation }) {
   const t = translations[language];
 
   return (
-    <ScrollView>
+    <ScrollView
+    contentContainerStyle={{ flexGrow: 1 }} 
+    horizontal={false} 
+    keyboardShouldPersistTaps="handled">
     <View style={styles.container}>
       {/* Botones para cambiar idioma */}
       <View style={styles.languageButtons}>
