@@ -16,31 +16,34 @@ import GeneralDoctorScreen from './src/screens/GeneralDoctorScreen';
 import SpecialistScreen from './src/screens/SpecialistScreen';
 import ProductsPharmacyScreen from './src/screens/ProductsPharmacyScree';
 import { LanguageProvider } from './Context';
+import { OrientationProvider } from './OrientationProvider';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
-          {/* Uso correcto de Stack.Screen */}
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Services" component={ServicesScreen} />
-          <Stack.Screen name="NewService" component={NewServiceScreen} />
-          <Stack.Screen name="Rol" component={RolScreen} />
-          <Stack.Screen name="Especialista" component={EspecialistaScreen} />
-          <Stack.Screen name="Repartidor" component={RepartidorScreen} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Cliente" component={ClienteScreen} />
-          <Stack.Screen name="VisitScreen" component={VisitScreen} />
-          <Stack.Screen name="PharmacyScreen" component={PharmacyScreen} />
-          <Stack.Screen name="GeneralDoctorScreen" component={GeneralDoctorScreen} />
-          <Stack.Screen name="SpecialistScreen" component={SpecialistScreen} />
-          <Stack.Screen name="ProductsPharmacy" component={ProductsPharmacyScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </LanguageProvider>
+    <OrientationProvider>
+      <LanguageProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            {/* Uso correcto de Stack.Screen */}
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Services" component={ServicesScreen} />
+            <Stack.Screen name="NewService" component={NewServiceScreen} />
+            <Stack.Screen name="Rol" component={RolScreen} />
+            <Stack.Screen name="Especialista" component={EspecialistaScreen} />
+            <Stack.Screen name="Repartidor" component={RepartidorScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="Cliente" component={ClienteScreen} />
+            <Stack.Screen name="VisitScreen" component={VisitScreen} />
+            <Stack.Screen name="PharmacyScreen" component={PharmacyScreen} />
+            <Stack.Screen name="GeneralDoctorScreen" component={GeneralDoctorScreen} />
+            <Stack.Screen name="SpecialistScreen" component={SpecialistScreen} />
+            <Stack.Screen name="ProductsPharmacy" component={ProductsPharmacyScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </LanguageProvider>
+    </OrientationProvider>
   );
 }
