@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert, TextInput } from 'react-native';
-import appFirebase from '../../credenciales';
-import {getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc} from 'firebase/firestore';
-
-const db = getFirestore(appFirebase);
 
 export default function Services({ navigation }) {
   const [services, setServices] = useState([
-    { id: 1, name: 'Specialists', image: 'https://example.com/service1.jpg' },
-    { id: 2, name: 'General doctor', image: 'https://example.com/service2.jpg' },
-    { id: 3, name: 'Pharmacy', image: 'https://example.com/service3.jpg' },
+    { id: 1, name: 'Specialists', image: require('../../assets/cardiologo.png') },
+    { id: 2, name: 'General doctor', image: require('../../assets/doctorgeneral.png') },
+    { id: 3, name: 'Pharmacy', image: require('../../assets/medicamentos.jpg') },
   ]);
+
   const [editingService, setEditingService] = useState(null); // Servicio en edición
   const [editedName, setEditedName] = useState(''); // Nuevo nombre del servicio
 
@@ -68,7 +65,7 @@ export default function Services({ navigation }) {
       <ScrollView style={styles.listContainer}>
         {services.map((service) => (
           <View key={service.id} style={styles.serviceItem}>
-            <Image source={{ uri: service.image }} style={styles.image} />
+            <Image source={service.image} style={styles.image} />
             {editingService === service.id ? (
               <TextInput
                 style={styles.editInput}
@@ -142,7 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     borderRadius: 10,
   },
-  image: { width: 30, height: 30, marginRight: 10 },
+  image: { width: 60, height: 60, marginRight: 10, resizeMode: 'contain' },
   actionsContainer: { flexDirection: 'row', alignItems: 'center' },
   editButton: { padding: 5, marginRight: 10 },
   saveButton: { padding: 5, marginRight: 10 },
