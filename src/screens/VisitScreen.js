@@ -1,13 +1,35 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function VisitScreen({ navigation }) {
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      selectDoctor: 'Selecciona un tipo de Doctor',
+      generalDoctor: 'Médico General',
+      specialist: 'Especialista',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+    },
+    en: {
+      selectDoctor: 'Select a type of Doctor',
+      generalDoctor: 'General Doctor',
+      specialist: 'Specialist',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+    },
+  };
+
+  const t = translations[language];
+
   const handleDoctorSelection = (type) => {
     console.log(`Selected: ${type}`);
-    if (type === 'General Doctor') {
-      navigation.navigate('GeneralDoctorScreen'); 
-    } else if (type === 'Specialist') {
-      navigation.navigate('SpecialistScreen'); 
+    if (type === t.generalDoctor) {
+      navigation.navigate('GeneralDoctorScreen');
+    } else if (type === t.specialist) {
+      navigation.navigate('SpecialistScreen');
     }
   };
 
@@ -18,30 +40,30 @@ export default function VisitScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../assets/icons8-menú-50.png')} style={styles.icon} />
         </TouchableOpacity>
-        <Text style={styles.title}>Select a type of Doctor</Text>
+        <Text style={styles.title}>{t.selectDoctor}</Text>
       </View>
 
       {/* Opciones principales */}
       <View style={styles.optionsContainer}>
         <TouchableOpacity
           style={styles.optionCard}
-          onPress={() => handleDoctorSelection('General Doctor')}
+          onPress={() => handleDoctorSelection(t.generalDoctor)}
         >
           <Image
             source={require('../../assets/doctorgeneral.png')} 
             style={styles.optionImage}
           />
-          <Text style={styles.optionText}>General Doctor</Text>
+          <Text style={styles.optionText}>{t.generalDoctor}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.optionCard}
-          onPress={() => handleDoctorSelection('Specialist')}
+          onPress={() => handleDoctorSelection(t.specialist)}
         >
           <Image
             source={require('../../assets/specialist.png')} 
             style={styles.optionImage}
           />
-          <Text style={styles.optionText}>Specialist</Text>
+          <Text style={styles.optionText}>{t.specialist}</Text>
         </TouchableOpacity>
       </View>
 
@@ -49,7 +71,7 @@ export default function VisitScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -59,12 +81,8 @@ export default function VisitScreen({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
-          <Image source={require('../../assets/icons8-datebook-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Datebook</Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );

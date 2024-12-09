@@ -1,8 +1,27 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function Services({ navigation }) {
-  // Función para navegar a la pantalla de detalle según el servicio
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      services: 'Servicios',
+      specialists: 'Especialistas',
+      generalDoctor: 'Médico General',
+      pharmacy: 'Farmacia',
+    },
+    en: {
+      services: 'Services',
+      specialists: 'Specialists',
+      generalDoctor: 'General Doctor',
+      pharmacy: 'Pharmacy',
+    },
+  };
+
+  const t = translations[language];
+
   const navigateToServiceDetail = (serviceName) => {
     switch (serviceName) {
       case 'Specialists':
@@ -22,30 +41,30 @@ export default function Services({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Services</Text>
+        <Text style={styles.title}>{t.services}</Text>
       </View>
 
       <ScrollView style={styles.listContainer}>
         {/* Botones para cada servicio */}
         <TouchableOpacity
           style={styles.serviceButton}
-          onPress={() => navigateToServiceDetail('Specialists')} // Redirige al detalle de Specialists
+          onPress={() => navigateToServiceDetail('Specialists')}
         >
-          <Text style={styles.serviceText}>Specialists</Text>
+          <Text style={styles.serviceText}>{t.specialists}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.serviceButton}
-          onPress={() => navigateToServiceDetail('General doctor')} // Redirige al detalle de General doctor
+          onPress={() => navigateToServiceDetail('General doctor')}
         >
-          <Text style={styles.serviceText}>General doctor</Text>
+          <Text style={styles.serviceText}>{t.generalDoctor}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.serviceButton}
-          onPress={() => navigateToServiceDetail('Pharmacy')} // Redirige al detalle de Pharmacy
+          onPress={() => navigateToServiceDetail('Pharmacy')}
         >
-          <Text style={styles.serviceText}>Pharmacy</Text>
+          <Text style={styles.serviceText}>{t.pharmacy}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

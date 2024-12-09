@@ -1,25 +1,66 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function PharmacyScreen({ navigation }) {
-  const medicines = [
-    {
-      id: '1',
-      name: 'Forxiga',
-      description:
-        'It is a medication used to treat type 2 diabetes mellitus and symptomatic chronic heart failure in adults.',
-      price: '$1,831',
-      image: require('../../assets/foxiga.png'), 
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      pharmacy: 'Farmacia',
+      description: 'Descripción',
+      price: 'Precio',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+      datebook: 'Agenda',
+      medicines: [
+        {
+          id: '1',
+          name: 'Forxiga',
+          description:
+            'Es un medicamento utilizado para tratar la diabetes mellitus tipo 2 y la insuficiencia cardíaca crónica sintomática en adultos.',
+          price: '$1,831',
+          image: require('../../assets/foxiga.png'),
+        },
+        {
+          id: '2',
+          name: 'Rhabil',
+          description:
+            'La reducción de bacteroides y la inflamación del intestino, ayudando a tratar el colon irritable y prevenir la aterosclerosis.',
+          price: '$1,330',
+          image: require('../../assets/rhabil.png'),
+        },
+      ],
     },
-    {
-      id: '2',
-      name: 'Rhabil',
-      description:
-        'The reduction of bacteroids and inflammation of the intestine, helping to treat irritable colon and prevent atherosclerosis.',
-      price: '$1,330',
-      image: require('../../assets/rhabil.png'), 
+    en: {
+      pharmacy: 'Pharmacy',
+      description: 'Description',
+      price: 'Price',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+      datebook: 'Datebook',
+      medicines: [
+        {
+          id: '1',
+          name: 'Forxiga',
+          description:
+            'It is a medication used to treat type 2 diabetes mellitus and symptomatic chronic heart failure in adults.',
+          price: '$1,831',
+          image: require('../../assets/foxiga.png'),
+        },
+        {
+          id: '2',
+          name: 'Rhabil',
+          description:
+            'The reduction of bacteroids and inflammation of the intestine, helping to treat irritable colon and prevent atherosclerosis.',
+          price: '$1,330',
+          image: require('../../assets/rhabil.png'),
+        },
+      ],
     },
-  ];
+  };
+
+  const t = translations[language];
 
   const handleProductSelect = (product) => {
     navigation.navigate('ProductsPharmacy', { product });
@@ -30,8 +71,12 @@ export default function PharmacyScreen({ navigation }) {
       <Image source={item.image} style={styles.medicineImage} />
       <View style={styles.medicineInfo}>
         <Text style={styles.medicineName}>{item.name}</Text>
-        <Text style={styles.medicineDescription}>Description: {item.description}</Text>
-        <Text style={styles.medicinePrice}>{item.price}</Text>
+        <Text style={styles.medicineDescription}>
+          {t.description}: {item.description}
+        </Text>
+        <Text style={styles.medicinePrice}>
+          {t.price}: {item.price}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -40,7 +85,7 @@ export default function PharmacyScreen({ navigation }) {
     <View style={styles.container}>
       {/* Barra superior */}
       <View style={styles.topBar}>
-        <Text style={styles.title}>Pharmacy</Text>
+        <Text style={styles.title}>{t.pharmacy}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image source={require('../../assets/icons8-nombre-50.png')} style={styles.icon} />
         </TouchableOpacity>
@@ -48,7 +93,7 @@ export default function PharmacyScreen({ navigation }) {
 
       {/* Lista de medicamentos */}
       <FlatList
-        data={medicines}
+        data={t.medicines}
         renderItem={renderMedicine}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
@@ -58,7 +103,7 @@ export default function PharmacyScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -68,14 +113,14 @@ export default function PharmacyScreen({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
           <Image
             source={require('../../assets/icons8-comprobante-de-pago-64.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Datebook</Text>
+          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>
