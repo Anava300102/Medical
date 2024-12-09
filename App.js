@@ -17,6 +17,9 @@ import SpecialistScreen from './src/screens/SpecialistScreen';
 import ProductsPharmacyScreen from './src/screens/ProductsPharmacyScree';
 import OrdersScreen from './src/screens/OrdersScreen';
 import ConfirmAppointmentScreen from './src/screens/ConfirmAppointmentScreen';
+import GeneralDoctorDetail from './src/screens/GeneralDoctorDetail';
+import PharmacyDetail from './src/screens/PharmacyDetail';
+import SpecialistDetail from './src/screens/SpecialistDetail';
 import { LanguageProvider } from './Context';
 import { OrientationProvider } from './OrientationProvider';
 
@@ -45,6 +48,9 @@ export default function App() {
             <Stack.Screen name="ProductsPharmacy" component={ProductsPharmacyScreen} />
             <Stack.Screen name="AppointmentsOrders" component={OrdersScreen} />
             <Stack.Screen name="ConfirmAppointmentScreen" component={ConfirmAppointmentScreen} options={{ title: 'Confirmar cita' }} />
+            <Stack.Screen name="SpecialistDetail" component={SpecialistDetail} />
+            <Stack.Screen name="GeneralDoctorDetail" component={GeneralDoctorDetail} />
+            <Stack.Screen name="PharmacyDetail" component={PharmacyDetail} />
           </Stack.Navigator>
         </NavigationContainer>
       </LanguageProvider>
