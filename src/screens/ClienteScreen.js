@@ -1,10 +1,33 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function ClienteScreen({ navigation }) {
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      chooseOption: 'Elige una opción',
+      visit: 'Visita',
+      pharmacy: 'Farmacia',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+      datebook: 'Agenda',
+    },
+    en: {
+      chooseOption: 'Choose an option',
+      visit: 'Visit',
+      pharmacy: 'Pharmacy',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+      datebook: 'Datebook',
+    },
+  };
+
+  const t = translations[language];
+
   const handleOptionSelection = (option) => {
     console.log(`Selected: ${option}`);
-    // Aquí puedes agregar la navegación según la opción seleccionada
     if (option === 'Visit') {
       navigation.navigate('VisitScreen'); // Asegúrate de registrar VisitScreen
     } else if (option === 'Pharmacy') {
@@ -19,7 +42,7 @@ export default function ClienteScreen({ navigation }) {
         <TouchableOpacity>
           <Image source={require('../../assets/icons8-menú-50.png')} style={styles.icon} />
         </TouchableOpacity>
-        <Text style={styles.title}>Choose an option</Text>
+        <Text style={styles.title}>{t.chooseOption}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image source={require('../../assets/icons8-nombre-50.png')} style={styles.icon} />
         </TouchableOpacity>
@@ -35,7 +58,7 @@ export default function ClienteScreen({ navigation }) {
             source={require('../../assets/ImagenVisita.png')} 
             style={styles.optionImage}
           />
-          <Text style={styles.optionText}>Visit</Text>
+          <Text style={styles.optionText}>{t.visit}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.optionCard}
@@ -45,7 +68,7 @@ export default function ClienteScreen({ navigation }) {
             source={require('../../assets/ImagenFarmacia.png')} 
             style={styles.optionImage}
           />
-          <Text style={styles.optionText}>Pharmacy</Text>
+          <Text style={styles.optionText}>{t.pharmacy}</Text>
         </TouchableOpacity>
       </View>
 
@@ -53,7 +76,7 @@ export default function ClienteScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -63,11 +86,11 @@ export default function ClienteScreen({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
           <Image source={require('../../assets/icons8-comprobante-de-pago-64.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Datebook</Text>
+          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>

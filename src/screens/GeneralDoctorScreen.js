@@ -1,41 +1,88 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function GeneralDoctor({ navigation }) {
-  const [appointments, setAppointments] = useState([]);
+  const { language } = useLanguage();
 
-  const doctors = [
-    {
-      id: '1',
-      name: 'Alfredo Lopez Sandoval',
-      phone: '4491633605',
-      email: 'alf.ls@gmail.com',
-      price: '$400',
-      image: require('../../assets/alfredosandoval.jpeg'),
+  const translations = {
+    es: {
+      generalDoctor: 'Médico General',
+      phone: 'Teléfono',
+      email: 'Correo Electrónico',
+      price: 'Precio',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+      datebook: 'Agenda',
+      doctors: [
+        {
+          id: '1',
+          name: 'Alfredo Lopez Sandoval',
+          phone: '4491633605',
+          email: 'alf.ls@gmail.com',
+          price: '$400',
+          image: require('../../assets/alfredosandoval.jpeg'),
+        },
+        {
+          id: '2',
+          name: 'Estefania Rodriguez Ponce',
+          phone: '4491237687',
+          email: 'estef.rp@gmail.com',
+          price: '$460',
+          image: require('../../assets/estefaniaponce.jpeg'),
+        },
+      ],
     },
-    {
-      id: '2',
-      name: 'Estefania Rodriguez Ponce',
-      phone: '4491237687',
-      email: 'estef.rp@gmail.com',
-      price: '$460',
-      image: require('../../assets/estefaniaponce.jpeg'),
+    en: {
+      generalDoctor: 'General Doctor',
+      phone: 'Phone',
+      email: 'Email',
+      price: 'Price',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+      datebook: 'Datebook',
+      doctors: [
+        {
+          id: '1',
+          name: 'Alfredo Lopez Sandoval',
+          phone: '4491633605',
+          email: 'alf.ls@gmail.com',
+          price: '$400',
+          image: require('../../assets/alfredosandoval.jpeg'),
+        },
+        {
+          id: '2',
+          name: 'Estefania Rodriguez Ponce',
+          phone: '4491237687',
+          email: 'estef.rp@gmail.com',
+          price: '$460',
+          image: require('../../assets/estefaniaponce.jpeg'),
+        },
+      ],
     },
-  ];
+  };
+
+  const t = translations[language];
+  const [appointments, setAppointments] = useState([]);
 
   const handleDoctorSelect = (doctor) => {
     navigation.navigate('ConfirmAppointmentScreen', { doctor });
   };
-  
 
   const renderDoctor = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => handleDoctorSelect(item)}>
       <Image source={item.image} style={styles.doctorImage} />
       <View style={styles.doctorInfo}>
         <Text style={styles.doctorName}>{item.name}</Text>
-        <Text style={styles.doctorDetails}>Phone: {item.phone}</Text>
-        <Text style={styles.doctorDetails}>Email: {item.email}</Text>
-        <Text style={styles.doctorPrice}>{item.price}</Text>
+        <Text style={styles.doctorDetails}>
+          {t.phone}: {item.phone}
+        </Text>
+        <Text style={styles.doctorDetails}>
+          {t.email}: {item.email}
+        </Text>
+        <Text style={styles.doctorPrice}>
+          {t.price}: {item.price}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -44,7 +91,7 @@ export default function GeneralDoctor({ navigation }) {
     <View style={styles.container}>
       {/* Barra superior */}
       <View style={styles.topBar}>
-        <Text style={styles.title}>General Doctor</Text>
+        <Text style={styles.title}>{t.generalDoctor}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image source={require('../../assets/icons8-nombre-50.png')} style={styles.icon} />
         </TouchableOpacity>
@@ -52,7 +99,7 @@ export default function GeneralDoctor({ navigation }) {
 
       {/* Lista de doctores */}
       <FlatList
-        data={doctors}
+        data={t.doctors}
         renderItem={renderDoctor}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
@@ -62,7 +109,7 @@ export default function GeneralDoctor({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -72,11 +119,11 @@ export default function GeneralDoctor({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
           <Image source={require('../../assets/icons8-comprobante-de-pago-64.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Datebook</Text>
+          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>

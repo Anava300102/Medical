@@ -1,7 +1,50 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function ProductsPharmacyScreen({ navigation }) {
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      pharmacy: 'Farmacia',
+      description: 'Descripción',
+      price: 'Precio',
+      note: 'Si tienes preguntas sobre este medicamento, ¡háznoslo saber!',
+      addToOrder: 'Añadir al pedido',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+      datebook: 'Agenda',
+      product: {
+        id: '1',
+        name: 'Forxiga',
+        description:
+          'Es un medicamento utilizado para tratar la diabetes mellitus tipo 2 y la insuficiencia cardíaca crónica sintomática en adultos.',
+        price: '$1,832.00',
+        image: require('../../assets/foxiga.png'),
+      },
+    },
+    en: {
+      pharmacy: 'Pharmacy',
+      description: 'Description',
+      price: 'Price',
+      note: 'If you have any questions about this medication, let us know!',
+      addToOrder: 'Add to order',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+      datebook: 'Datebook',
+      product: {
+        id: '1',
+        name: 'Forxiga',
+        description:
+          'It is a medication used to treat type 2 diabetes mellitus and symptomatic chronic heart failure in adults.',
+        price: '$1,832.00',
+        image: require('../../assets/foxiga.png'),
+      },
+    },
+  };
+
+  const t = translations[language];
   const [quantity, setQuantity] = useState(1);
 
   const incrementQuantity = () => {
@@ -16,14 +59,13 @@ export default function ProductsPharmacyScreen({ navigation }) {
 
   const handleAddToOrder = () => {
     const product = {
-      id: '1', // Cambia esto por el ID dinámico si hay varios productos
-      name: 'Forxiga',
-      price: 1832,
+      id: t.product.id,
+      name: t.product.name,
+      price: t.product.price,
       quantity,
-      image: require('../../assets/foxiga.png'),
+      image: t.product.image,
     };
 
-    // Navegar a OrdersScreen y pasar el producto
     navigation.navigate('AppointmentsOrders', { product });
   };
 
@@ -31,24 +73,20 @@ export default function ProductsPharmacyScreen({ navigation }) {
     <View style={styles.container}>
       {/* Barra superior sin goBack */}
       <View style={styles.topBar}>
-        <Text style={styles.title}>Pharmacy</Text>
+        <Text style={styles.title}>{t.pharmacy}</Text>
       </View>
 
       {/* Información del producto */}
       <View style={styles.productContainer}>
-        <Image
-          source={require('../../assets/foxiga.png')}
-          style={styles.productImage}
-        />
-        <Text style={styles.productTitle}>Forxiga</Text>
+        <Image source={t.product.image} style={styles.productImage} />
+        <Text style={styles.productTitle}>{t.product.name}</Text>
         <Text style={styles.productDescription}>
-          Description: It is a medication used to treat type 2 diabetes mellitus and symptomatic
-          chronic heart failure in adults.
+          {t.description}: {t.product.description}
         </Text>
-        <Text style={styles.productPrice}>Price: $1,832.00</Text>
-        <Text style={styles.productNote}>
-          If you have any questions about this medication, let us know!
+        <Text style={styles.productPrice}>
+          {t.price}: {t.product.price}
         </Text>
+        <Text style={styles.productNote}>{t.note}</Text>
       </View>
 
       {/* Sección de cantidad y botón */}
@@ -68,7 +106,7 @@ export default function ProductsPharmacyScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.addButton} onPress={handleAddToOrder}>
-          <Text style={styles.addButtonText}>Add to order</Text>
+          <Text style={styles.addButtonText}>{t.addToOrder}</Text>
         </TouchableOpacity>
       </View>
 
@@ -76,7 +114,7 @@ export default function ProductsPharmacyScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -86,11 +124,11 @@ export default function ProductsPharmacyScreen({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
           <Image source={require('../../assets/icons8-comprobante-de-pago-64.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Datebook</Text>
+          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>

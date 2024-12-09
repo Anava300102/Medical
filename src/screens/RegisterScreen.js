@@ -1,142 +1,101 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, Image, Alert, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Para los iconos de teléfono y candado
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, ScrollView, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../../Context';
-import { useOrientation } from '../../OrientationProvider';
 import { auth } from '../../credenciales';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import appFirebase from '../../credenciales';
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const db = getFirestore(appFirebase);
 
-export default function RegisterScreen({ navigation }) { // Recibe 'navigation' como prop
+export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const { language, changeLanguage } = useLanguage();
-  const { orientation } = useOrientation();
+  const { language } = useLanguage();
 
   const translations = {
     es: {
-      selectImage: 'Selecciona una imagen',
       title: 'Registro',
       namePlaceholder: 'Nombre',
-      lastNamePlaceholder: 'Apellido',
       emailPlaceholder: 'Correo electrónico',
       phonePlaceholder: 'Teléfono',
       passwordPlaceholder: 'Contraseña',
-      confirmPasswordPlaceholder: 'Confirmar contraseña',
-      registerButton: 'Registrarse',
+      registerButton: 'Confirmar',
       loginRedirect: '¿Ya tienes una cuenta? Inicia sesión',
     },
     en: {
-      selectImage: 'Select an image',
       title: 'Register',
       namePlaceholder: 'Name',
-      lastNamePlaceholder: 'Last name',
       emailPlaceholder: 'Email',
       phonePlaceholder: 'Phone',
       passwordPlaceholder: 'Password',
-      confirmPasswordPlaceholder: 'Confirm password',
-      registerButton: 'Register',
+      registerButton: 'Confirm',
       loginRedirect: 'Already have an account? Log in',
-    }
-  }
+    },
+  };
 
   const t = translations[language];
+
   const handleRegister = async () => {
-    // Validar que todos los campos estén llenos
     if (!email || !password) {
-      Alert.alert('Error', 'Por favor, completa todos los campos.');
-      return;
-    }
-
-    // Validar formato del correo electrónico
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert('Error', 'Por favor, ingresa un correo válido.');
-      return;
-    }
-
-    // Validar longitud mínima de la contraseña
-    if (password.length < 6) {
-      Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
+      Alert.alert('Error', t.completeFields || 'Please complete all fields.');
       return;
     }
 
     try {
-      // Intentar registrar al usuario en Firebase
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const { user } = userCredential;
 
-      const userData = {
+      await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         role: "user",
         name: name,
-        phone: phone, // Puedes agregar otros campos relevantes aquí
-      };
+        phone: phone,
+      });
 
-      // Guarda los datos en Firestore
-      await setDoc(doc(db, "users", user.uid), userData);
-
-      Alert.alert('Éxito', 'Registro exitoso');
-      navigation.navigate('Cliente'); // Redirige a la siguiente pantalla después del registro
+      Alert.alert('Success', t.registerSuccess || 'Registration successful.');
+      navigation.navigate('Cliente');
     } catch (error) {
-      // Manejar posibles errores de registro
-      if (error.code === 'auth/email-already-in-use') {
-        Alert.alert('Error', 'Este correo electrónico ya está registrado.');
-      } else if (error.code === 'auth/invalid-email') {
-        Alert.alert('Error', 'El correo electrónico no es válido.');
-      } else if (error.code === 'auth/weak-password') {
-        Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
-      } else {
-        Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
-      }
-    };
+      Alert.alert('Error', t.registerError || 'An error occurred. Please try again.');
+    }
   };
 
   const handleLoginRedirect = () => {
-    navigation.navigate('Login'); // Redirige a la pantalla de inicio de sesión
+    navigation.navigate('Login');
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Imagen de fondo */}
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <ImageBackground
-          source={require('../../assets/Home.png')} // Aquí puedes agregar tu propia ruta
+          source={require('../../assets/Home.png')}
           style={styles.backgroundImage}
           resizeMode="cover"
         >
           <View style={styles.overlay} />
         </ImageBackground>
 
-
-        {/* Formulario de registro */}
         <View style={styles.formContainer}>
-          <Text style={styles.title}>Registro</Text>
+          <Text style={styles.title}>{t.title}</Text>
 
           <View style={styles.inputContainer}>
             <Ionicons name="person-outline" size={20} color="#07DBEB" />
             <TextInput
               style={styles.input}
-              placeholder="Nombre"
+              placeholder={t.namePlaceholder}
               value={name}
               onChangeText={setName}
             />
           </View>
 
-
           <View style={styles.inputContainer}>
             <Ionicons name="mail-outline" size={20} color="#07DBEB" />
             <TextInput
               style={styles.input}
-              placeholder="Correo"
+              placeholder={t.emailPlaceholder}
               value={email}
               onChangeText={setEmail}
             />
@@ -146,35 +105,32 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
             <Ionicons name="call-outline" size={20} color="#07DBEB" />
             <TextInput
               style={styles.input}
-              placeholder="Teléfono"
+              placeholder={t.phonePlaceholder}
               keyboardType="phone-pad"
               value={phone}
               onChangeText={setPhone}
             />
           </View>
 
-
           <View style={styles.inputContainer}>
             <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
             <TextInput
               style={styles.input}
-              placeholder="Contraseña"
+              placeholder={t.passwordPlaceholder}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
           </View>
 
-          {/* Botón de confirmación */}
           <TouchableOpacity style={styles.confirmButton} onPress={handleRegister}>
-            <Text style={styles.buttonText}>Confirmar</Text>
+            <Text style={styles.buttonText}>{t.registerButton}</Text>
           </TouchableOpacity>
 
-          {/* Enlace para iniciar sesión */}
           <View style={styles.loginLinkContainer}>
-            <Text style={styles.loginText}>¿Ya tienes una cuenta? </Text>
+            <Text style={styles.loginText}>{t.loginRedirect}</Text>
             <TouchableOpacity onPress={handleLoginRedirect}>
-              <Text style={styles.loginLink}>Inicia sesión</Text>
+              <Text style={styles.loginLink}>{t.loginRedirect}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -199,22 +155,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  profileContainer: {
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: '#07DBEB',
-  },
-  profileText: {
-    marginTop: 10,
-    color: 'white',
-    fontWeight: 'bold',
   },
   formContainer: {
     position: 'absolute',

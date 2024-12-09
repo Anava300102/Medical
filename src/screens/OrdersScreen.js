@@ -1,16 +1,49 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function OrdersScreen({ navigation }) {
-  const [orders, setOrders] = useState([
-    {
-      id: '1',
-      name: 'Forxiga',
-      price: 1832,
-      quantity: 1,
-      image: require('../../assets/foxiga.png'),
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      ordersTitle: 'Citas/Pedidos',
+      total: 'Total',
+      confirmOrder: 'Confirmar Pedido',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+      datebook: 'Agenda',
+      orders: [
+        {
+          id: '1',
+          name: 'Forxiga',
+          price: 1832,
+          quantity: 1,
+          image: require('../../assets/foxiga.png'),
+        },
+      ],
     },
-  ]);
+    en: {
+      ordersTitle: 'Appointments/Orders',
+      total: 'Total',
+      confirmOrder: 'Confirm Order',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+      datebook: 'Datebook',
+      orders: [
+        {
+          id: '1',
+          name: 'Forxiga',
+          price: 1832,
+          quantity: 1,
+          image: require('../../assets/foxiga.png'),
+        },
+      ],
+    },
+  };
+
+  const t = translations[language];
+  const [orders, setOrders] = useState(t.orders);
 
   const incrementQuantity = (id) => {
     setOrders((prevOrders) =>
@@ -62,7 +95,7 @@ export default function OrdersScreen({ navigation }) {
       </View>
       <TouchableOpacity onPress={() => deleteOrder(item.id)}>
         <Image
-          source={require('../../assets/icons8-eliminar-30.png')} 
+          source={require('../../assets/icons8-eliminar-30.png')}
           style={styles.deleteIcon}
         />
       </TouchableOpacity>
@@ -71,10 +104,12 @@ export default function OrdersScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Barra superior */}
       <View style={styles.topBar}>
-        <Text style={styles.title}>Appointments/Orders</Text>
+        <Text style={styles.title}>{t.ordersTitle}</Text>
       </View>
 
+      {/* Lista de pedidos */}
       <FlatList
         data={orders}
         renderItem={renderOrder}
@@ -82,17 +117,21 @@ export default function OrdersScreen({ navigation }) {
         contentContainerStyle={styles.listContainer}
       />
 
+      {/* Total y Confirmar Pedido */}
       <View style={styles.bottomContainer}>
-        <Text style={styles.totalText}>Total ${calculateTotal()}</Text>
+        <Text style={styles.totalText}>
+          {t.total} ${calculateTotal()}
+        </Text>
         <TouchableOpacity style={styles.confirmButton}>
-          <Text style={styles.confirmButtonText}>Confirm Order</Text>
+          <Text style={styles.confirmButtonText}>{t.confirmOrder}</Text>
         </TouchableOpacity>
       </View>
 
+      {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -102,14 +141,14 @@ export default function OrdersScreen({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
           <Image
             source={require('../../assets/icons8-comprobante-de-pago-64.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Datebook</Text>
+          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,34 +1,66 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useLanguage } from '../../Context';
 
 export default function SpecialistScreen({ navigation }) {
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      specialist: 'Especialista',
+      expertise: 'Experto en:',
+      price: 'Precio',
+      services: 'Servicios',
+      appointmentsOrders: 'Citas/Pedidos',
+      datebook: 'Agenda',
+      specialists: [
+        {
+          id: '1',
+          name: 'Cardiólogo',
+          expertise: ['Ecocardiograma', 'Prueba de esfuerzo', 'Hipertensión arterial', 'Insuficiencia cardíaca'],
+          price: '$700',
+          image: require('../../assets/cardiologo.png'),
+        },
+        {
+          id: '2',
+          name: 'Otorrinolaringólogo',
+          expertise: ['Órganos sensoriales (olfato, gusto y oído)', 'Órganos de fonación', 'Sistema vestibular central'],
+          price: '$500',
+          image: require('../../assets/otorrino.png'),
+        },
+      ],
+    },
+    en: {
+      specialist: 'Specialist',
+      expertise: 'Expert in:',
+      price: 'Price',
+      services: 'Services',
+      appointmentsOrders: 'Appointments/Orders',
+      datebook: 'Datebook',
+      specialists: [
+        {
+          id: '1',
+          name: 'Cardiologist',
+          expertise: ['Echocardiogram', 'Stress Test', 'High blood pressure', 'Heart failure'],
+          price: '$700',
+          image: require('../../assets/cardiologo.png'),
+        },
+        {
+          id: '2',
+          name: 'Otorhinolaryngology',
+          expertise: ['Sense organs (odor, smell and taste)', 'Phonation organs', 'Central vestibular system'],
+          price: '$500',
+          image: require('../../assets/otorrino.png'),
+        },
+      ],
+    },
+  };
+
+  const t = translations[language];
   const [appointments, setAppointments] = useState([]);
 
-  const specialists = [
-    {
-      id: '1',
-      name: 'Cardiologist',
-      expertise: ['Echocardiogram', 'Stress Test', 'High blood pressure', 'Heart failure'],
-      price: '$700',
-      image: require('../../assets/cardiologo.png'),
-    },
-    {
-      id: '2',
-      name: 'Otorhinolaryngology',
-      expertise: [
-        'Sense organs (odor, smell and taste)',
-        'Phonation organs',
-        'Central vestibular system',
-      ],
-      price: '$500',
-      image: require('../../assets/otorrino.png'),
-    },
-  ];
-
   const handleSpecialistSelect = (specialist) => {
-    // Agregar al especialista seleccionado a la lista de citas
     setAppointments((prevAppointments) => [...prevAppointments, specialist]);
-    // Redirigir a la pantalla de "Appointments/Orders"
     navigation.navigate('AppointmentsOrders', { appointments: [...appointments, specialist] });
   };
 
@@ -37,13 +69,15 @@ export default function SpecialistScreen({ navigation }) {
       <Image source={item.image} style={styles.specialistImage} />
       <View style={styles.specialistInfo}>
         <Text style={styles.specialistName}>{item.name}</Text>
-        <Text style={styles.specialistDetails}>Expert in:</Text>
+        <Text style={styles.specialistDetails}>{t.expertise}</Text>
         {item.expertise.map((expert, index) => (
           <Text key={index} style={styles.expertiseItem}>
             {expert}
           </Text>
         ))}
-        <Text style={styles.specialistPrice}>{item.price}</Text>
+        <Text style={styles.specialistPrice}>
+          {t.price}: {item.price}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -52,12 +86,12 @@ export default function SpecialistScreen({ navigation }) {
     <View style={styles.container}>
       {/* Barra superior */}
       <View style={styles.topBar}>
-        <Text style={styles.title}>Specialist</Text>
+        <Text style={styles.title}>{t.specialist}</Text>
       </View>
 
       {/* Lista de especialistas */}
       <FlatList
-        data={specialists}
+        data={t.specialists}
         renderItem={renderSpecialist}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
@@ -67,7 +101,7 @@ export default function SpecialistScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
           <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>Services</Text>
+          <Text style={styles.navText}>{t.services}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
@@ -77,14 +111,14 @@ export default function SpecialistScreen({ navigation }) {
             source={require('../../assets/icons8-historial-de-pedidos-50.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Appointments/Orders</Text>
+          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
           <Image
             source={require('../../assets/icons8-comprobante-de-pago-64.png')}
             style={styles.navIcon}
           />
-          <Text style={styles.navText}>Datebook</Text>
+          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -4,16 +4,53 @@ import appFirebase from '../../credenciales';
 import { auth } from '../../credenciales';
 import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
+import { useLanguage } from '../../Context';
 
 // Inicializa Firestore
 const db = getFirestore(appFirebase);
 
 export default function ProfileScreen({ navigation }) {
+  const { language } = useLanguage();
+
+  const translations = {
+    es: {
+      profile: 'Perfil',
+      editInformation: 'Editar Información',
+      saveChanges: 'Guardar Cambios',
+      deleteAccount: 'Eliminar Cuenta',
+      deleteAccountMessage: '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
+      successMessage: 'Los datos se actualizaron correctamente.',
+      errorMessage: 'Hubo un problema al actualizar los datos.',
+      deleteSuccess: 'Tu cuenta se ha eliminado correctamente.',
+      deleteError: 'Hubo un problema al eliminar tu cuenta. Asegúrate de haber iniciado sesión recientemente.',
+      loading: 'Cargando...',
+      noName: 'Sin nombre',
+      noPhone: 'Sin teléfono',
+      noEmail: 'Sin correo',
+    },
+    en: {
+      profile: 'Profile',
+      editInformation: 'Edit Information',
+      saveChanges: 'Save Changes',
+      deleteAccount: 'Delete Account',
+      deleteAccountMessage: 'Are you sure you want to delete your account? This action cannot be undone.',
+      successMessage: 'The data has been successfully updated.',
+      errorMessage: 'There was a problem updating the data.',
+      deleteSuccess: 'Your account has been successfully deleted.',
+      deleteError: 'There was a problem deleting your account. Make sure you have recently signed in.',
+      loading: 'Loading...',
+      noName: 'No name',
+      noPhone: 'No phone',
+      noEmail: 'No email',
+    },
+  };
+
+  const t = translations[language];
   const [userInfo, setUserInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({
     name: '',
-    phone: ''
+    phone: '',
   });
 
   useEffect(() => {
@@ -21,17 +58,17 @@ export default function ProfileScreen({ navigation }) {
       const user = auth.currentUser;
 
       if (user) {
-        const docRef = doc(db, "users", user.uid);
+        const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           setUserInfo(docSnap.data());
           setEditableData({
             name: docSnap.data().name || '',
-            phone: docSnap.data().phone || ''
+            phone: docSnap.data().phone || '',
           });
         } else {
-          Alert.alert('Error', 'No se encontraron datos para este usuario.');
+          Alert.alert('Error', 'No user data found.');
         }
       }
     };
@@ -43,18 +80,18 @@ export default function ProfileScreen({ navigation }) {
     const user = auth.currentUser;
 
     if (user) {
-      const docRef = doc(db, "users", user.uid);
+      const docRef = doc(db, 'users', user.uid);
 
       try {
         await updateDoc(docRef, editableData);
         setUserInfo((prev) => ({
           ...prev,
-          ...editableData
+          ...editableData,
         }));
         setIsEditing(false);
-        Alert.alert('Éxito', 'Los datos se actualizaron correctamente.');
+        Alert.alert('Success', t.successMessage);
       } catch (error) {
-        Alert.alert('Error', 'Hubo un problema al actualizar los datos.');
+        Alert.alert('Error', t.errorMessage);
       }
     }
   };
@@ -64,29 +101,25 @@ export default function ProfileScreen({ navigation }) {
 
     if (user) {
       Alert.alert(
-        'Eliminar Cuenta',
-        '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
+        t.deleteAccount,
+        t.deleteAccountMessage,
         [
-          { text: 'Cancelar', style: 'cancel' },
+          { text: 'Cancel', style: 'cancel' },
           {
-            text: 'Eliminar',
+            text: 'Delete',
             style: 'destructive',
             onPress: async () => {
               try {
-                // Elimina el registro del usuario en Firestore
-                const docRef = doc(db, "users", user.uid);
+                const docRef = doc(db, 'users', user.uid);
                 await deleteDoc(docRef);
-
-                // Elimina la cuenta del usuario de Firebase Auth
                 await deleteUser(user);
-
-                Alert.alert('Cuenta eliminada', 'Tu cuenta se ha eliminado correctamente.');
-                navigation.navigate('Login'); // Redirige a la pantalla de inicio de sesión
+                Alert.alert('Success', t.deleteSuccess);
+                navigation.navigate('Login');
               } catch (error) {
-                Alert.alert('Error', 'Hubo un problema al eliminar tu cuenta. Asegúrate de haber iniciado sesión recientemente.');
+                Alert.alert('Error', t.deleteError);
               }
-            }
-          }
+            },
+          },
         ]
       );
     }
@@ -99,31 +132,22 @@ export default function ProfileScreen({ navigation }) {
   if (!userInfo) {
     return (
       <View style={styles.container}>
-        <Text>Cargando...</Text>
+        <Text>{t.loading}</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <View style={styles.background}>
-          <Image
-            source={require('../../assets/fondoperfil.jpeg')}
-            style={styles.backgroundImage}
-          />
+          <Image source={require('../../assets/fondoperfil.jpeg')} style={styles.backgroundImage} />
         </View>
         <View style={styles.profileContainer}>
-          <Image
-            source={require('../../assets/profile.png')}
-            style={styles.profileImage}
-          />
+          <Image source={require('../../assets/profile.png')} style={styles.profileImage} />
         </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.sectionTitle}>Profile</Text>
+          <Text style={styles.sectionTitle}>{t.profile}</Text>
           {isEditing ? (
             <>
               <View style={styles.infoRow}>
@@ -144,33 +168,35 @@ export default function ProfileScreen({ navigation }) {
               </View>
               <View style={styles.infoRow}>
                 <Image source={require('../../assets/icons8-nuevo-post-30.png')} style={styles.icon} />
-                <Text style={styles.infoText}>{userInfo.email || 'Sin correo'}</Text>
+                <Text style={styles.infoText}>{userInfo.email || t.noEmail}</Text>
               </View>
             </>
           ) : (
             <>
               <View style={styles.infoRow}>
                 <Image source={require('../../assets/icons8-nombre-50.png')} style={styles.icon} />
-                <Text style={styles.infoText}>{userInfo.name || 'Sin nombre'}</Text>
+                <Text style={styles.infoText}>{userInfo.name || t.noName}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Image source={require('../../assets/icons8-llamada-50.png')} style={styles.icon} />
-                <Text style={styles.infoText}>{userInfo.phone || 'Sin teléfono'}</Text>
+                <Text style={styles.infoText}>{userInfo.phone || t.noPhone}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Image source={require('../../assets/icons8-nuevo-post-30.png')} style={styles.icon} />
-                <Text style={styles.infoText}>{userInfo.email || 'Sin correo'}</Text>
+                <Text style={styles.infoText}>{userInfo.email || t.noEmail}</Text>
               </View>
             </>
           )}
 
-          <TouchableOpacity style={styles.updateButton} onPress={isEditing ? handleUpdateInformation : () => setIsEditing(true)}>
-            <Text style={styles.updateButtonText}>{isEditing ? 'Guardar Cambios' : 'Editar Información'}</Text>
+          <TouchableOpacity
+            style={styles.updateButton}
+            onPress={isEditing ? handleUpdateInformation : () => setIsEditing(true)}
+          >
+            <Text style={styles.updateButtonText}>{isEditing ? t.saveChanges : t.editInformation}</Text>
           </TouchableOpacity>
 
-          {/* Botón para eliminar la cuenta */}
           <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccount}>
-            <Text style={styles.deleteButtonText}>Eliminar Cuenta</Text>
+            <Text style={styles.deleteButtonText}>{t.deleteAccount}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
