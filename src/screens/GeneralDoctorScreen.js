@@ -24,11 +24,9 @@ export default function GeneralDoctor({ navigation }) {
   ];
 
   const handleDoctorSelect = (doctor) => {
-    // Agregar al doctor seleccionado a la lista de citas
-    setAppointments((prevAppointments) => [...prevAppointments, doctor]);
-    // Redirigir a la pantalla de "Appointments/Orders"
-    navigation.navigate('AppointmentsOrders', { appointments: [...appointments, doctor] });
+    navigation.navigate('ConfirmAppointmentScreen', { doctor });
   };
+  
 
   const renderDoctor = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => handleDoctorSelect(item)}>
