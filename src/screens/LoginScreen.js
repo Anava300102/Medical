@@ -5,6 +5,10 @@ import { useLanguage } from '../../Context';
 import { useOrientation } from '../../OrientationProvider';
 import { auth } from '../../credenciales';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+
+// Inicializamos Firestore
+const db = getFirestore();
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -44,14 +48,34 @@ export default function LoginScreen({ navigation }) {
       return;
     }
     try {
+      // Inicia sesión con Firebase Authentication
       await signInWithEmailAndPassword(auth, email, password);
-      Alert.alert('Éxito', 'Inicio de sesión Exitoso');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Cliente' }], // No hay botón de regreso a login después de iniciar sesión
-      });
-    } catch {
-      Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
+      const user = auth.currentUser;
+
+      // Si el inicio de sesión es exitoso, obtenemos el UID
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+
+        // Comprobamos el rol del usuario
+        if (userData.role === 'admin') {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Services' }], // Redirige a la pantalla de servicios si es admin
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Cliente' }], // Redirige a la pantalla cliente si es usuario normal
+          });
+        }
+      } else {
+        Alert.alert('Error', 'No se encontraron datos de usuario en Firestore.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Correo o contraseña incorrectos.');
     }
   };
 
