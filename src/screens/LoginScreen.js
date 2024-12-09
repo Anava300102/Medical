@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../../Context';
-import * as ScreenOrientation from 'expo-screen-orientation';
 import { useOrientation } from '../../OrientationProvider';
 
 export default function LoginScreen({ navigation }) {
@@ -43,88 +42,86 @@ export default function LoginScreen({ navigation }) {
       return;
     }
 
-    // Validar credenciales ficticias
     if (global.userData?.email === email && global.userData?.password === password) {
       Alert.alert('Éxito', t.successMessage);
-      
+      navigation.navigate('Rol'); // Navega a la pantalla de roles
     } else {
       Alert.alert('Error', t.invalidCredentials);
     }
-    navigation.navigate('Rol'); // Navega a la pantalla de roles
   };
 
   const handleRegisterRedirect = () => {
-    navigation.navigate('Register'); // Navega a la pantalla de registro
+    navigation.navigate('Register');
   };
 
   const t = translations[language];
 
   return (
-    <ScrollView
-    contentContainerStyle={{ flexGrow: 1 }} 
-    horizontal={false} 
-    keyboardShouldPersistTaps="handled">
-    <View style={[styles.container, { minHeight: orientation === 'landscape' ? 300 : '100%' }]}>
-      {/* Botones para cambiar idioma */}
-      <View style={styles.languageButtons}>
-        <TouchableOpacity
-          style={[styles.languageButton, language === 'es' && styles.activeLanguageButton]}
-          onPress={() => changeLanguage('es')}
-        >
-          <Text style={styles.languageButtonText}>ES</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.languageButton, language === 'en' && styles.activeLanguageButton]}
-          onPress={() => changeLanguage('en')}
-        >
-          <Text style={styles.languageButtonText}>EN</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Imagen en la parte superior */}
-      <Image
-        source={require('../../assets/Home.png')} // Asegúrate de que esta ruta sea correcta
-        style={styles.image}
-      />
-
-      {/* Parte inferior con fondo blanco */}
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>{t.loginTitle}</Text>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder={t.emailPlaceholder}
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder={t.passwordPlaceholder}
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
-
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>{t.loginButton}</Text>
-        </TouchableOpacity>
-
-        <View style={styles.registerLinkContainer}>
-          <Text style={styles.registerText}>{t.registerText} </Text>
-          <TouchableOpacity onPress={handleRegisterRedirect}>
-            <Text style={styles.registerLink}>{t.registerLink}</Text>
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Botones para cambiar idioma */}
+        <View style={styles.languageButtons}>
+          <TouchableOpacity
+            style={[styles.languageButton, language === 'es' && styles.activeLanguageButton]}
+            onPress={() => changeLanguage('es')}
+          >
+            <Text style={styles.languageButtonText}>ES</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.languageButton, language === 'en' && styles.activeLanguageButton]}
+            onPress={() => changeLanguage('en')}
+          >
+            <Text style={styles.languageButtonText}>EN</Text>
           </TouchableOpacity>
         </View>
-      </View>
+
+        {/* Imagen en la parte superior */}
+        <Image
+          source={require('../../assets/Home.png')} // Asegúrate de que esta ruta sea correcta
+          style={styles.image}
+        />
+
+        {/* Parte inferior con fondo blanco */}
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>{t.loginTitle}</Text>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail-outline" size={20} color="#07DBEB" />
+            <TextInput
+              style={styles.input}
+              placeholder={t.emailPlaceholder}
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
+            <TextInput
+              style={styles.input}
+              placeholder={t.passwordPlaceholder}
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.buttonText}>{t.loginButton}</Text>
+          </TouchableOpacity>
+
+          <View style={styles.registerLinkContainer}>
+            <Text style={styles.registerText}>{t.registerText} </Text>
+            <TouchableOpacity onPress={handleRegisterRedirect}>
+              <Text style={styles.registerLink}>{t.registerLink}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </View>
-    </ScrollView>
   );
 }
 
@@ -153,7 +150,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: '50%',
+    height: 200,
     resizeMode: 'cover',
   },
   formContainer: {

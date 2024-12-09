@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Para los iconos de teléfono y candado
 import { useLanguage } from '../../Context';
+import { useOrientation } from '../../OrientationProvider';
 
 export default function RegisterScreen({ navigation }) { // Recibe 'navigation' como prop
-  const [name, setName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const { language, changeLanguage } = useLanguage();
+  const { orientation } = useOrientation();
 
   const translations = {
     es: {
@@ -39,14 +37,10 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
     }
   }
 
-
-
-
-
   const t = translations[language];
   const handleRegister = () => {
     // Validar que todos los campos estén llenos
-    if (!name || !lastName || !email || !phone || !password || !confirmPassword) {
+    if (!email || !password) {
       Alert.alert('Error', 'Por favor, completa todos los campos.');
       return;
     }
@@ -58,21 +52,9 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
       return;
     }
 
-    // Validar que las contraseñas coincidan
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Las contraseñas no coinciden.');
-      return;
-    }
-
     // Validar longitud mínima de la contraseña
     if (password.length < 6) {
       Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
-      return;
-    }
-
-    // Validar que el número de teléfono sea numérico y tenga una longitud adecuada
-    if (!/^\d+$/.test(phone) || phone.length < 8) {
-      Alert.alert('Error', 'Por favor, ingresa un número de teléfono válido.');
       return;
     }
 
@@ -96,35 +78,10 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
         <View style={styles.overlay} />
       </ImageBackground>
 
-      {/* Contenedor de la imagen de perfil */}
-      <View style={styles.profileContainer}>
-        <Image source={require('../../assets/icons8-nuevo-post-30.png')} style={styles.profileImage} />
-        <Text style={styles.profileText}>Selecciona una imagen</Text>
-      </View>
 
       {/* Formulario de registro */}
       <View style={styles.formContainer}>
         <Text style={styles.title}>Registro</Text>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="person-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre"
-            value={name}
-            onChangeText={setName}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="person-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido(s)"
-            value={lastName}
-            onChangeText={setLastName}
-          />
-        </View>
 
         <View style={styles.inputContainer}>
           <Ionicons name="mail-outline" size={20} color="#07DBEB" />
@@ -137,17 +94,6 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
         </View>
 
         <View style={styles.inputContainer}>
-          <Ionicons name="call-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder="Número de teléfono"
-            keyboardType="phone-pad"
-            value={phone}
-            onChangeText={setPhone}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
           <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
           <TextInput
             style={styles.input}
@@ -155,17 +101,6 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
             secureTextEntry
             value={password}
             onChangeText={setPassword}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirmar contraseña"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
           />
         </View>
 
