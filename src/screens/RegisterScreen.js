@@ -5,9 +5,15 @@ import { useLanguage } from '../../Context';
 import { useOrientation } from '../../OrientationProvider';
 import { auth } from '../../credenciales';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import appFirebase from '../../credenciales';
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
+
+const db = getFirestore(appFirebase);
 
 export default function RegisterScreen({ navigation }) { // Recibe 'navigation' como prop
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const { language, changeLanguage } = useLanguage();
   const { orientation } = useOrientation();
@@ -62,9 +68,21 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
 
     try {
       // Intentar registrar al usuario en Firebase
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const { user } = userCredential;
+
+      const userData = {
+        email: user.email,
+        role: "user",
+        name: name,
+        phone: phone, // Puedes agregar otros campos relevantes aquí
+      };
+
+      // Guarda los datos en Firestore
+      await setDoc(doc(db, "users", user.uid), userData);
+
       Alert.alert('Éxito', 'Registro exitoso');
-      navigation.navigate('Rol'); // Redirige a la siguiente pantalla después del registro
+      navigation.navigate('Cliente'); // Redirige a la siguiente pantalla después del registro
     } catch (error) {
       // Manejar posibles errores de registro
       if (error.code === 'auth/email-already-in-use') {
@@ -76,10 +94,6 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
       } else {
         Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
       }
-
-      // Si todo está correcto, navegar a la pantalla de servicios
-      Alert.alert('Éxito', 'Registro exitoso');
-      navigation.navigate('Rol');
     };
   };
 
@@ -108,6 +122,17 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
           <Text style={styles.title}>Registro</Text>
 
           <View style={styles.inputContainer}>
+            <Ionicons name="person-outline" size={20} color="#07DBEB" />
+            <TextInput
+              style={styles.input}
+              placeholder="Nombre"
+              value={name}
+              onChangeText={setName}
+            />
+          </View>
+
+
+          <View style={styles.inputContainer}>
             <Ionicons name="mail-outline" size={20} color="#07DBEB" />
             <TextInput
               style={styles.input}
@@ -116,6 +141,18 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
               onChangeText={setEmail}
             />
           </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="call-outline" size={20} color="#07DBEB" />
+            <TextInput
+              style={styles.input}
+              placeholder="Teléfono"
+              keyboardType="phone-pad"
+              value={phone}
+              onChangeText={setPhone}
+            />
+          </View>
+
 
           <View style={styles.inputContainer}>
             <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />

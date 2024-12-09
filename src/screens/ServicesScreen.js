@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert, Tex
 export default function Services({ navigation }) {
   const [services, setServices] = useState([
     { id: 1, name: 'Specialists' },
-    { id: 2, name: 'General doctor' },
+    { id: 2, name: 'General doctor'},
     { id: 3, name: 'Pharmacy'},
   ]);
 
@@ -50,11 +50,18 @@ export default function Services({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Services</Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate('NewService', { addService })} 
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.listContainer}>
         {services.map((service) => (
           <View key={service.id} style={styles.serviceItem}>
+            <Image source={service.image} style={styles.image} />
             {editingService === service.id ? (
               <TextInput
                 style={styles.editInput}
