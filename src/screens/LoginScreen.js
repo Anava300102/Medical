@@ -46,7 +46,10 @@ export default function LoginScreen({ navigation }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert('Éxito', 'Inicio de sesión Exitoso');
-      navigation.navigate('Rol');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Rol' }], // No hay botón de regreso a login después de iniciar sesión
+      });
     } catch {
       Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
     }
