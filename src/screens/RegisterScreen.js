@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, Image, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Para los iconos de teléfono y candado
 import { useLanguage } from '../../Context';
 import { useOrientation } from '../../OrientationProvider';
+import { auth } from '../../credenciales';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function RegisterScreen({ navigation }) { // Recibe 'navigation' como prop
   const [email, setEmail] = useState('');
@@ -38,7 +40,7 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
   }
 
   const t = translations[language];
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Validar que todos los campos estén llenos
     if (!email || !password) {
       Alert.alert('Error', 'Por favor, completa todos los campos.');
@@ -58,9 +60,27 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
       return;
     }
 
-    // Si todo está correcto, navegar a la pantalla de servicios
-    Alert.alert('Éxito', 'Registro exitoso');
-    navigation.navigate('Rol');
+    try {
+      // Intentar registrar al usuario en Firebase
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert('Éxito', 'Registro exitoso');
+      navigation.navigate('Rol'); // Redirige a la siguiente pantalla después del registro
+    } catch (error) {
+      // Manejar posibles errores de registro
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('Error', 'Este correo electrónico ya está registrado.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Error', 'El correo electrónico no es válido.');
+      } else if (error.code === 'auth/weak-password') {
+        Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
+      } else {
+        Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
+      }
+
+      // Si todo está correcto, navegar a la pantalla de servicios
+      Alert.alert('Éxito', 'Registro exitoso');
+      navigation.navigate('Rol');
+    };
   };
 
   const handleLoginRedirect = () => {
@@ -69,54 +89,59 @@ export default function RegisterScreen({ navigation }) { // Recibe 'navigation' 
 
   return (
     <View style={styles.container}>
-      {/* Imagen de fondo */}
-      <ImageBackground
-        source={require('../../assets/Home.png')} // Aquí puedes agregar tu propia ruta
-        style={styles.backgroundImage}
-        resizeMode="cover"
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.overlay} />
-      </ImageBackground>
+        {/* Imagen de fondo */}
+        <ImageBackground
+          source={require('../../assets/Home.png')} // Aquí puedes agregar tu propia ruta
+          style={styles.backgroundImage}
+          resizeMode="cover"
+        >
+          <View style={styles.overlay} />
+        </ImageBackground>
 
 
-      {/* Formulario de registro */}
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Registro</Text>
+        {/* Formulario de registro */}
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Registro</Text>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder="Correo"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail-outline" size={20} color="#07DBEB" />
+            <TextInput
+              style={styles.input}
+              placeholder="Correo"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color="#07DBEB" />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
 
-        {/* Botón de confirmación */}
-        <TouchableOpacity style={styles.confirmButton} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Confirmar</Text>
-        </TouchableOpacity>
-
-        {/* Enlace para iniciar sesión */}
-        <View style={styles.loginLinkContainer}>
-          <Text style={styles.loginText}>¿Ya tienes una cuenta? </Text>
-          <TouchableOpacity onPress={handleLoginRedirect}>
-            <Text style={styles.loginLink}>Inicia sesión</Text>
+          {/* Botón de confirmación */}
+          <TouchableOpacity style={styles.confirmButton} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Confirmar</Text>
           </TouchableOpacity>
+
+          {/* Enlace para iniciar sesión */}
+          <View style={styles.loginLinkContainer}>
+            <Text style={styles.loginText}>¿Ya tienes una cuenta? </Text>
+            <TouchableOpacity onPress={handleLoginRedirect}>
+              <Text style={styles.loginLink}>Inicia sesión</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -129,7 +154,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: '100%',
-    height: '100%',
+    height: 200,
   },
   overlay: {
     position: 'absolute',

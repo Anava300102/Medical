@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, Scro
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../../Context';
 import { useOrientation } from '../../OrientationProvider';
+import { auth } from '../../credenciales';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -35,18 +37,18 @@ export default function LoginScreen({ navigation }) {
     },
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const t = translations[language];
     if (!email || !password) {
       Alert.alert('Error', t.errorMessage);
       return;
     }
-
-    if (global.userData?.email === email && global.userData?.password === password) {
-      Alert.alert('Éxito', t.successMessage);
-      navigation.navigate('Rol'); // Navega a la pantalla de roles
-    } else {
-      Alert.alert('Error', t.invalidCredentials);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      Alert.alert('Éxito', 'Inicio de sesión Exitoso');
+      navigation.navigate('Rol');
+    } catch {
+      Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
     }
   };
 
