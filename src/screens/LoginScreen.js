@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
       Alert.alert('Éxito', 'Inicio de sesión Exitoso');
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Rol' }], // No hay botón de regreso a login después de iniciar sesión
+        routes: [{ name: 'Cliente' }], // No hay botón de regreso a login después de iniciar sesión
       });
     } catch {
       Alert.alert('Error', 'Ocurrió un error. Intenta nuevamente.');
