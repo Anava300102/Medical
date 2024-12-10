@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import appFirebase from '../../credenciales';
 import { useLanguage } from '../../Context';
+
+const db = getFirestore(appFirebase);
 
 export default function GeneralDoctor({ navigation }) {
   const { language } = useLanguage();
@@ -12,24 +16,6 @@ export default function GeneralDoctor({ navigation }) {
       email: 'Correo Electrónico',
       price: 'Precio',
       appointmentsOrders: 'Citas/Pedidos',
-      doctors: [
-        {
-          id: '1',
-          name: 'Alfredo Lopez Sandoval',
-          phone: '4491633605',
-          email: 'alf.ls@gmail.com',
-          price: '$400',
-          image: require('../../assets/alfredosandoval.jpeg'),
-        },
-        {
-          id: '2',
-          name: 'Estefania Rodriguez Ponce',
-          phone: '4491237687',
-          email: 'estef.rp@gmail.com',
-          price: '$460',
-          image: require('../../assets/estefaniaponce.jpeg'),
-        },
-      ],
     },
     en: {
       generalDoctor: 'General Doctor',
@@ -37,29 +23,32 @@ export default function GeneralDoctor({ navigation }) {
       email: 'Email',
       price: 'Price',
       appointmentsOrders: 'Appointments/Orders',
-      doctors: [
-        {
-          id: '1',
-          name: 'Alfredo Lopez Sandoval',
-          phone: '4491633605',
-          email: 'alf.ls@gmail.com',
-          price: '$400',
-          image: require('../../assets/alfredosandoval.jpeg'),
-        },
-        {
-          id: '2',
-          name: 'Estefania Rodriguez Ponce',
-          phone: '4491237687',
-          email: 'estef.rp@gmail.com',
-          price: '$460',
-          image: require('../../assets/estefaniaponce.jpeg'),
-        },
-      ],
     },
   };
 
   const t = translations[language];
-  const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'generaldoctor'));
+        const doctorsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setDoctors(doctorsData);
+      } catch (error) {
+        console.error('Error al cargar los doctores:', error);
+        Alert.alert('Error', 'No se pudieron cargar los datos de los doctores.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
 
   const handleDoctorSelect = (doctor) => {
     navigation.navigate('ConfirmAppointmentScreen', { doctor });
@@ -67,7 +56,6 @@ export default function GeneralDoctor({ navigation }) {
 
   const renderDoctor = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => handleDoctorSelect(item)}>
-      <Image source={item.image} style={styles.doctorImage} />
       <View style={styles.doctorInfo}>
         <Text style={styles.doctorName}>{item.name}</Text>
         <Text style={styles.doctorDetails}>
@@ -77,7 +65,7 @@ export default function GeneralDoctor({ navigation }) {
           {t.email}: {item.email}
         </Text>
         <Text style={styles.doctorPrice}>
-          {t.price}: {item.price}
+          {t.price}: ${item.price}
         </Text>
       </View>
     </TouchableOpacity>
@@ -88,32 +76,27 @@ export default function GeneralDoctor({ navigation }) {
       {/* Barra superior */}
       <View style={styles.topBar}>
         <Text style={styles.title}>{t.generalDoctor}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Image
-            source={require('../../assets/icons8-nombre-50.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Lista de doctores */}
-      <FlatList
-        data={t.doctors}
-        renderItem={renderDoctor}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
+      {loading ? (
+        <Text style={styles.loadingText}>Cargando doctores...</Text>
+      ) : (
+        <FlatList
+          data={doctors}
+          renderItem={renderDoctor}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={<Text style={styles.emptyText}>No hay doctores disponibles.</Text>}
+        />
+      )}
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('AppointmentsOrders', { appointments })}
+          onPress={() => navigation.navigate('AppointmentsOrders', { appointments: [] })}
         >
-          <Image
-            source={require('../../assets/icons8-historial-de-pedidos-50.png')}
-            style={styles.navIcon}
-          />
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
       </View>
@@ -140,16 +123,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  icon: {
-    width: 30,
-    height: 30,
-    resizeMode: 'contain',
-  },
   listContainer: {
     padding: 15,
   },
   card: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#000',
@@ -161,12 +139,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ddd',
-  },
-  doctorImage: {
-    width: 80,
-    height: 80,
-    resizeMode: 'contain',
-    marginRight: 15,
   },
   doctorInfo: {
     flex: 1,
@@ -187,6 +159,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#07DBEB',
   },
+  loadingText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#666',
+  },
+  emptyText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#888',
+    marginTop: 20,
+  },
   bottomBar: {
     position: 'absolute',
     bottom: 0,
@@ -201,11 +185,6 @@ const styles = StyleSheet.create({
   },
   navItem: {
     alignItems: 'center',
-  },
-  navIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
   },
   navText: {
     fontSize: 12,

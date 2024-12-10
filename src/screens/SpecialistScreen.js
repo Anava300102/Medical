@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import appFirebase from '../../credenciales';
 import { useLanguage } from '../../Context';
+
+const db = getFirestore(appFirebase);
 
 export default function SpecialistScreen({ navigation }) {
   const { language } = useLanguage();
@@ -8,71 +12,65 @@ export default function SpecialistScreen({ navigation }) {
   const translations = {
     es: {
       specialist: 'Especialista',
-      expertise: 'Experto en:',
-      price: 'Precio',
+      specialty: 'Especialidad:',
+      phone: 'Teléfono:',
+      email: 'Correo:',
+      price: 'Precio:',
       appointmentsOrders: 'Citas/Pedidos',
-      specialists: [
-        {
-          id: '1',
-          name: 'Cardiólogo',
-          expertise: ['Ecocardiograma', 'Prueba de esfuerzo', 'Hipertensión arterial', 'Insuficiencia cardíaca'],
-          price: '$700',
-          image: require('../../assets/cardiologo.png'),
-        },
-        {
-          id: '2',
-          name: 'Otorrinolaringólogo',
-          expertise: ['Órganos sensoriales (olfato, gusto y oído)', 'Órganos de fonación', 'Sistema vestibular central'],
-          price: '$500',
-          image: require('../../assets/otorrino.png'),
-        },
-      ],
     },
     en: {
       specialist: 'Specialist',
-      expertise: 'Expert in:',
-      price: 'Price',
+      specialty: 'Specialty:',
+      phone: 'Phone:',
+      email: 'Email:',
+      price: 'Price:',
       appointmentsOrders: 'Appointments/Orders',
-      specialists: [
-        {
-          id: '1',
-          name: 'Cardiologist',
-          expertise: ['Echocardiogram', 'Stress Test', 'High blood pressure', 'Heart failure'],
-          price: '$700',
-          image: require('../../assets/cardiologo.png'),
-        },
-        {
-          id: '2',
-          name: 'Otorhinolaryngology',
-          expertise: ['Sense organs (odor, smell and taste)', 'Phonation organs', 'Central vestibular system'],
-          price: '$500',
-          image: require('../../assets/otorrino.png'),
-        },
-      ],
     },
   };
 
   const t = translations[language];
-  const [appointments, setAppointments] = useState([]);
+  const [specialists, setSpecialists] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSpecialists = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'specialistdoctor'));
+        const specialistsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setSpecialists(specialistsData);
+      } catch (error) {
+        console.error('Error al cargar especialistas:', error);
+        Alert.alert('Error', 'No se pudieron cargar los datos de los especialistas.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSpecialists();
+  }, []);
 
   const handleSpecialistSelect = (specialist) => {
-    setAppointments((prevAppointments) => [...prevAppointments, specialist]);
-    navigation.navigate('AppointmentsOrders', { appointments: [...appointments, specialist] });
+    navigation.navigate('AppointmentsOrders', { specialist });
   };
 
   const renderSpecialist = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => handleSpecialistSelect(item)}>
-      <Image source={item.image} style={styles.specialistImage} />
       <View style={styles.specialistInfo}>
         <Text style={styles.specialistName}>{item.name}</Text>
-        <Text style={styles.specialistDetails}>{t.expertise}</Text>
-        {item.expertise.map((expert, index) => (
-          <Text key={index} style={styles.expertiseItem}>
-            {expert}
-          </Text>
-        ))}
+        <Text style={styles.specialistDetails}>
+          {t.specialty} {item.specialty}
+        </Text>
+        <Text style={styles.specialistDetails}>
+          {t.phone} {item.phone}
+        </Text>
+        <Text style={styles.specialistDetails}>
+          {t.email} {item.email}
+        </Text>
         <Text style={styles.specialistPrice}>
-          {t.price}: {item.price}
+          {t.price} ${item.price}
         </Text>
       </View>
     </TouchableOpacity>
@@ -86,23 +84,24 @@ export default function SpecialistScreen({ navigation }) {
       </View>
 
       {/* Lista de especialistas */}
-      <FlatList
-        data={t.specialists}
-        renderItem={renderSpecialist}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
+      {loading ? (
+        <Text style={styles.loadingText}>Cargando especialistas...</Text>
+      ) : (
+        <FlatList
+          data={specialists}
+          renderItem={renderSpecialist}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={<Text style={styles.emptyText}>No hay especialistas disponibles.</Text>}
+        />
+      )}
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('AppointmentsOrders', { appointments })}
+          onPress={() => navigation.navigate('AppointmentsOrders')}
         >
-          <Image
-            source={require('../../assets/icons8-historial-de-pedidos-50.png')}
-            style={styles.navIcon}
-          />
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
       </View>
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   card: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#000',
@@ -144,12 +143,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ddd',
-  },
-  specialistImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-    marginRight: 15,
   },
   specialistInfo: {
     flex: 1,
@@ -165,16 +158,23 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
   },
-  expertiseItem: {
-    fontSize: 14,
-    color: '#555',
-    marginLeft: 10,
-  },
   specialistPrice: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#07DBEB',
     marginTop: 5,
+  },
+  loadingText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#666',
+  },
+  emptyText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#888',
+    marginTop: 20,
   },
   bottomBar: {
     position: 'absolute',
@@ -190,11 +190,6 @@ const styles = StyleSheet.create({
   },
   navItem: {
     alignItems: 'center',
-  },
-  navIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
   },
   navText: {
     fontSize: 12,
