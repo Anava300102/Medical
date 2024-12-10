@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { getFirestore, collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import appFirebase from '../../credenciales';
 
@@ -48,20 +48,6 @@ export default function GeneralDoctorDetail({ navigation }) {
 
     return (
         <View style={styles.container}>
-             <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
-            <View style={styles.header}>
-                <Text style={styles.title}>General Doctor Detail</Text>
-                <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => navigation.navigate('AddDoctorScreen')}
-                >
-                    <Text style={styles.addButtonText}>+ Agregar Doctor</Text>
-                </TouchableOpacity>
-            </View>
-
             <FlatList
                 data={doctors}
                 renderItem={({ item }) => (
@@ -93,8 +79,19 @@ export default function GeneralDoctorDetail({ navigation }) {
                     </View>
                 )}
                 keyExtractor={(item) => item.id}
+                ListHeaderComponent={
+                    <View style={styles.header}>
+                        <Text style={styles.title}>General Doctor Detail</Text>
+                        <TouchableOpacity
+                            style={styles.addButton}
+                            onPress={() => navigation.navigate('AddDoctorScreen')}
+                        >
+                            <Text style={styles.addButtonText}>+ Agregar Doctor</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                contentContainerStyle={{ paddingBottom: 20 }}
             />
-            </ScrollView>
         </View>
     );
 }
