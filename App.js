@@ -22,6 +22,8 @@ import PharmacyDetail from './src/screens/PharmacyDetail';
 import SpecialistDetail from './src/screens/SpecialistDetail';
 import AddDoctorScreen from './src/screens/AddDoctorScreen';
 import EditDoctorScreen from './src/screens/EditDoctorScreen';
+import EditPharmacyScreen from './src/screens/EditPharmacyScreen';
+import AddPharmacyScreen from './src/screens/AddPharmacyScreen';
 import AddSpecialistScreen from './src/screens/AddSpecialistScreen';
 import EditSpecialistScreen from './src/screens/EditSpecialistScreen';
 import { LanguageProvider } from './Context';
@@ -54,11 +56,13 @@ export default function App() {
             <Stack.Screen name="ConfirmAppointmentScreen" component={ConfirmAppointmentScreen} options={{ title: 'Confirmar cita' }} />
             <Stack.Screen name="SpecialistDetail" component={SpecialistDetail} />
             <Stack.Screen name="GeneralDoctorDetail" component={GeneralDoctorDetail} />
-            <Stack.Screen name="PharmacyDetail" component={PharmacyDetail} />
             <Stack.Screen name="AddDoctorScreen" component={AddDoctorScreen} />
             <Stack.Screen name="EditDoctorScreen" component={EditDoctorScreen} />
             <Stack.Screen name="AddSpecialistScreen" component={AddSpecialistScreen} />
             <Stack.Screen name="EditSpecialistScreen" component={EditSpecialistScreen} />
+            <Stack.Screen name="PharmacyDetail" component={PharmacyDetail} />
+            <Stack.Screen name="EditPharmacyScreen" component={EditPharmacyScreen} />
+            <Stack.Screen name="AddPharmacyScreen" component={AddPharmacyScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </LanguageProvider>
