@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView } from 'react-native';
 import { getFirestore, collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import appFirebase from '../../credenciales';
 
@@ -48,6 +48,10 @@ export default function GeneralDoctorDetail({ navigation }) {
 
     return (
         <View style={styles.container}>
+             <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
             <View style={styles.header}>
                 <Text style={styles.title}>General Doctor Detail</Text>
                 <TouchableOpacity
@@ -90,6 +94,7 @@ export default function GeneralDoctorDetail({ navigation }) {
                 )}
                 keyExtractor={(item) => item.id}
             />
+            </ScrollView>
         </View>
     );
 }
