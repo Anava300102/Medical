@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Alert, Scro
 import appFirebase from '../../credenciales';
 import { auth } from '../../credenciales';
 import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { deleteUser } from 'firebase/auth';
+import { deleteUser, signOut } from 'firebase/auth';  // Importamos signOut para cerrar sesión
 import { useLanguage } from '../../Context';
 
 // Inicializa Firestore
@@ -27,6 +27,7 @@ export default function ProfileScreen({ navigation }) {
       noName: 'Sin nombre',
       noPhone: 'Sin teléfono',
       noEmail: 'Sin correo',
+      signOut: 'Cerrar sesión',  // Traducción para el botón de cerrar sesión
     },
     en: {
       profile: 'Profile',
@@ -42,6 +43,7 @@ export default function ProfileScreen({ navigation }) {
       noName: 'No name',
       noPhone: 'No phone',
       noEmail: 'No email',
+      signOut: 'Sign Out',  // Translation for the sign-out button
     },
   };
 
@@ -125,6 +127,15 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);  // Cierra sesión
+      navigation.navigate('Login');  // Redirige a la pantalla de Login
+    } catch (error) {
+      Alert.alert('Error', 'Hubo un problema al cerrar sesión. Intenta nuevamente.');
+    }
+  };
+
   const handleChange = (field, value) => {
     setEditableData({ ...editableData, [field]: value });
   };
@@ -197,6 +208,11 @@ export default function ProfileScreen({ navigation }) {
 
           <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccount}>
             <Text style={styles.deleteButtonText}>{t.deleteAccount}</Text>
+          </TouchableOpacity>
+
+          {/* Botón de cerrar sesión */}
+          <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+            <Text style={styles.signOutButtonText}>{t.signOut}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -292,6 +308,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   deleteButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  signOutButton: {
+    backgroundColor: '#FF8C00',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  signOutButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

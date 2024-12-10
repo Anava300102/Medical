@@ -104,9 +104,15 @@ export default function OrdersScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Barra superior */}
+      {/* Barra superior con el botón de perfil */}
       <View style={styles.topBar}>
         <Text style={styles.title}>{t.ordersTitle}</Text>
+        <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Profile')}>
+          <Image
+            source={require('../../assets/icons8-nombre-50.png')}
+            style={styles.navIcon}
+          />
+        </TouchableOpacity>
       </View>
 
       {/* Lista de pedidos */}
@@ -129,10 +135,6 @@ export default function OrdersScreen({ navigation }) {
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
-          <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.services}</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => navigation.navigate('OrdersScreen')}
@@ -142,13 +144,6 @@ export default function OrdersScreen({ navigation }) {
             style={styles.navIcon}
           />
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
-          <Image
-            source={require('../../assets/icons8-comprobante-de-pago-64.png')}
-            style={styles.navIcon}
-          />
-          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -163,8 +158,9 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
@@ -172,6 +168,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
+  },
+  profileButton: {
+    padding: 5,
+  },
+  navIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
   },
   listContainer: {
     padding: 15,
@@ -262,7 +266,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: '#ddd',
@@ -270,11 +274,6 @@ const styles = StyleSheet.create({
   },
   navItem: {
     alignItems: 'center',
-  },
-  navIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
   },
   navText: {
     fontSize: 12,
