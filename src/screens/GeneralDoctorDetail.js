@@ -48,16 +48,6 @@ export default function GeneralDoctorDetail({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>General Doctor Detail</Text>
-                <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => navigation.navigate('AddDoctorScreen')}
-                >
-                    <Text style={styles.addButtonText}>+ Agregar Doctor</Text>
-                </TouchableOpacity>
-            </View>
-
             <FlatList
                 data={doctors}
                 renderItem={({ item }) => (
@@ -89,6 +79,18 @@ export default function GeneralDoctorDetail({ navigation }) {
                     </View>
                 )}
                 keyExtractor={(item) => item.id}
+                ListHeaderComponent={
+                    <View style={styles.header}>
+                        <Text style={styles.title}>General Doctor Detail</Text>
+                        <TouchableOpacity
+                            style={styles.addButton}
+                            onPress={() => navigation.navigate('AddDoctorScreen')}
+                        >
+                            <Text style={styles.addButtonText}>+ Agregar Doctor</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                contentContainerStyle={{ paddingBottom: 20 }}
             />
         </View>
     );

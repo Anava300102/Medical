@@ -48,16 +48,6 @@ export default function GeneralSpecialistDetail({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Especialista Doctor Detail</Text>
-                <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => navigation.navigate('AddSpecialistScreen')}
-                >
-                    <Text style={styles.addButtonText}>+ Agregar Especialista</Text>
-                </TouchableOpacity>
-            </View>
-
             <FlatList
                 data={specialists}
                 renderItem={({ item }) => (
@@ -91,6 +81,18 @@ export default function GeneralSpecialistDetail({ navigation }) {
                     </View>
                 )}
                 keyExtractor={(item) => item.id}
+                ListHeaderComponent={
+                    <View style={styles.header}>
+                        <Text style={styles.title}>Especialista Doctor Detail</Text>
+                        <TouchableOpacity
+                            style={styles.addButton}
+                            onPress={() => navigation.navigate('AddSpecialistScreen')}
+                        >
+                            <Text style={styles.addButtonText}>+ Agregar Especialista</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                contentContainerStyle={{ paddingBottom: 20 }}
             />
         </View>
     );

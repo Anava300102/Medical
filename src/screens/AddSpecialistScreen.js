@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 const db = getFirestore();
@@ -28,6 +28,10 @@ export default function AddSpecialistScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
       <Text style={styles.title}>Agregar Especialista</Text>
       <TextInput
         style={styles.input}
@@ -62,6 +66,7 @@ export default function AddSpecialistScreen({ navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleAddSpecialist}>
         <Text style={styles.buttonText}>Agregar Especialista</Text>
       </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }

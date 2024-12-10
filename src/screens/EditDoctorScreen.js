@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native';
 import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 import appFirebase from '../../credenciales';
 
@@ -31,6 +31,10 @@ export default function EditDoctorScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+       <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
       <Text style={styles.title}>Editar Doctor</Text>
       <TextInput
         style={styles.input}
@@ -59,6 +63,7 @@ export default function EditDoctorScreen({ route, navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Guardar Cambios</Text>
       </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
