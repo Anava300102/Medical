@@ -61,15 +61,15 @@ export default function GeneralSpecialistDetail({ navigation }) {
             <FlatList
                 data={specialists}
                 renderItem={({ item }) => (
-                    <View style={styles.specialistItem}>
-                        <Text style={styles.specialistText}>{item.name}</Text>
-                        <Text style={styles.specialistText}>{item.phone}</Text>
-                        <Text style={styles.specialistText}>{item.email}</Text>
-                        <Text style={styles.specialistText}>{item.specialty}</Text>
-                        <Text style={styles.specialistText}>{item.price}</Text>
+                    <View style={styles.specialistCard}>
+                        <Text style={styles.specialistName}>{item.name}</Text>
+                        <Text style={styles.specialistInfo}>Tel: {item.phone}</Text>
+                        <Text style={styles.specialistInfo}>Email: {item.email}</Text>
+                        <Text style={styles.specialistInfo}>Especialidad: {item.specialty}</Text>
+                        <Text style={styles.specialistInfo}>Precio: {item.price}</Text>
                         <View style={styles.actionsContainer}>
                             <TouchableOpacity
-                                style={styles.button}
+                                style={[styles.actionButton, styles.editButton]}
                                 onPress={() => navigation.navigate('EditSpecialistScreen', {
                                     specialistId: item.id,
                                     specialistName: item.name,
@@ -79,13 +79,13 @@ export default function GeneralSpecialistDetail({ navigation }) {
                                     specialistPrice: item.price
                                 })}
                             >
-                                <Text style={styles.buttonText}>Editar</Text>
+                                <Text style={styles.actionText}>Editar</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={styles.button}
+                                style={[styles.actionButton, styles.deleteButton]}
                                 onPress={() => handleDeleteSpecialist(item.id)}
                             >
-                                <Text style={styles.buttonText}>Eliminar</Text>
+                                <Text style={styles.actionText}>Eliminar</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#f5f5f5',
     },
     header: {
         flexDirection: 'row',
@@ -109,8 +109,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     title: {
-        fontSize: 24,
+        fontSize: 19,
         fontWeight: 'bold',
+        color: '#333',
     },
     addButton: {
         backgroundColor: '#07DBEB',
@@ -120,31 +121,51 @@ const styles = StyleSheet.create({
     addButtonText: {
         color: '#fff',
         fontSize: 16,
+        fontWeight: 'bold',
     },
-    specialistItem: {
+    specialistCard: {
+        backgroundColor: '#fff',
         padding: 15,
-        marginBottom: 10,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 10,
+        marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 3,
     },
-    specialistText: {
-        fontSize: 16,
+    specialistName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 5,
+    },
+    specialistInfo: {
+        fontSize: 14,
+        color: '#555',
         marginBottom: 5,
     },
     actionsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 10,
     },
-    button: {
-        backgroundColor: '#07DBEB',
+    actionButton: {
+        flex: 1,
         padding: 10,
         borderRadius: 5,
-        marginBottom: 10,
+        marginHorizontal: 5,
+        alignItems: 'center',
     },
-    buttonText: {
+    editButton: {
+        backgroundColor: '#07DBEB',
+    },
+    deleteButton: {
+        backgroundColor: '#FF4D4D',
+    },
+    actionText: {
         color: '#fff',
-        textAlign: 'center',
-        fontSize: 16,
+        fontWeight: 'bold',
+        fontSize: 14,
     },
 });

@@ -15,19 +15,13 @@ export default function GeneralDoctorDetail({ navigation }) {
         setDoctors(doctorsList);
     };
 
-    // Llamamos a fetchDoctors cuando el componente se monta
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            // Llamar a fetchDoctors cuando la pantalla se enfoque nuevamente
             fetchDoctors();
         });
-
-        // Limpiar el listener cuando el componente se desmonte
         return unsubscribe;
     }, [navigation]);
 
-
-    // Función para eliminar un doctor
     const handleDeleteDoctor = async (id) => {
         Alert.alert(
             'Eliminar Doctor',
@@ -39,15 +33,12 @@ export default function GeneralDoctorDetail({ navigation }) {
                     style: 'destructive',
                     onPress: async () => {
                         try {
-                            // Intentamos eliminar el doctor
                             await deleteDoc(doc(db, 'generaldoctor', id));
-                            // Si la eliminación fue exitosa, actualizamos la lista de doctores
                             fetchDoctors();
                             Alert.alert('Éxito', 'Doctor eliminado correctamente');
                         } catch (error) {
-                            // Si algo sale mal, mostramos el alert de error
                             Alert.alert('Error', 'Hubo un problema al eliminar el doctor.');
-                            console.error(error); // Es útil loguear el error para entenderlo mejor en la consola
+                            console.error(error);
                         }
                     }
                 }
@@ -57,7 +48,6 @@ export default function GeneralDoctorDetail({ navigation }) {
 
     return (
         <View style={styles.container}>
-            {/* Botón de agregar doctor */}
             <View style={styles.header}>
                 <Text style={styles.title}>General Doctor Detail</Text>
                 <TouchableOpacity
@@ -68,33 +58,32 @@ export default function GeneralDoctorDetail({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            {/* Lista de doctores */}
             <FlatList
                 data={doctors}
                 renderItem={({ item }) => (
-                    <View style={styles.doctorItem}>
-                        <Text style={styles.doctorText}>{item.name}</Text>
-                        <Text style={styles.doctorText}>{item.phone}</Text>
-                        <Text style={styles.doctorText}>{item.email}</Text>
-                        <Text style={styles.doctorText}>{item.price}</Text>
+                    <View style={styles.doctorCard}>
+                        <Text style={styles.doctorName}>{item.name}</Text>
+                        <Text style={styles.doctorInfo}>Tel: {item.phone}</Text>
+                        <Text style={styles.doctorInfo}>Email: {item.email}</Text>
+                        <Text style={styles.doctorInfo}>Precio: {item.price}</Text>
                         <View style={styles.actionsContainer}>
                             <TouchableOpacity
-                                style={styles.button}
+                                style={[styles.actionButton, styles.editButton]}
                                 onPress={() => navigation.navigate('EditDoctorScreen', {
                                     doctorId: item.id,
                                     doctorName: item.name,
                                     doctorPhone: item.phone,
                                     doctorEmail: item.email,
-                                    doctorPrice: item.price
+                                    doctorPrice: item.price,
                                 })}
                             >
-                                <Text style={styles.buttonText}>Editar</Text>
+                                <Text style={styles.actionText}>Editar</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={styles.button}
+                                style={[styles.actionButton, styles.deleteButton]}
                                 onPress={() => handleDeleteDoctor(item.id)}
                             >
-                                <Text style={styles.buttonText}>Eliminar</Text>
+                                <Text style={styles.actionText}>Eliminar</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -109,7 +98,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#f5f5f5',
     },
     header: {
         flexDirection: 'row',
@@ -120,6 +109,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        color: '#333',
     },
     addButton: {
         backgroundColor: '#07DBEB',
@@ -129,31 +119,51 @@ const styles = StyleSheet.create({
     addButtonText: {
         color: '#fff',
         fontSize: 16,
+        fontWeight: 'bold',
     },
-    doctorItem: {
+    doctorCard: {
+        backgroundColor: '#fff',
         padding: 15,
-        marginBottom: 10,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 10,
+        marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
     },
-    doctorText: {
-        fontSize: 16,
+    doctorName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 5,
+    },
+    doctorInfo: {
+        fontSize: 14,
+        color: '#555',
         marginBottom: 5,
     },
     actionsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 10,
     },
-    button: {
-        backgroundColor: '#07DBEB',
+    actionButton: {
+        flex: 1,
         padding: 10,
         borderRadius: 5,
-        marginBottom: 10,
+        marginHorizontal: 5,
+        alignItems: 'center',
     },
-    buttonText: {
+    editButton: {
+        backgroundColor: '#07DBEB',
+    },
+    deleteButton: {
+        backgroundColor: '#FF4D4D',
+    },
+    actionText: {
         color: '#fff',
-        textAlign: 'center',
-        fontSize: 16,
+        fontWeight: 'bold',
+        fontSize: 14,
     },
 });
