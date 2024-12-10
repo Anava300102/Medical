@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { getFirestore, collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import appFirebase from '../../credenciales';
+import { useLanguage } from '../../Context';  // Asegúrate de importar el contexto de idioma
 
 const db = getFirestore(appFirebase);
 
 export default function PharmacyDetail({ navigation }) {
     const [medications, setMedications] = useState([]);
+    const { language } = useLanguage(); // Obtener el idioma actual desde el contexto
 
     // Función para obtener todos los medicamentos
     const fetchMedications = async () => {
@@ -28,20 +30,20 @@ export default function PharmacyDetail({ navigation }) {
 
     const handleDeleteMedication = async (id) => {
         Alert.alert(
-            'Eliminar Medicamento',
-            '¿Estás seguro de que deseas eliminar este medicamento?',
+            translations[language].deleteMedicationTitle,
+            translations[language].deleteMedicationMessage,
             [
-                { text: 'Cancelar', style: 'cancel' },
+                { text: translations[language].cancel, style: 'cancel' },
                 {
-                    text: 'Eliminar',
+                    text: translations[language].delete,
                     style: 'destructive',
                     onPress: async () => {
                         try {
                             await deleteDoc(doc(db, 'pharmacy', id));
                             fetchMedications();
-                            Alert.alert('Éxito', 'Medicamento eliminado correctamente.');
+                            Alert.alert(translations[language].success, translations[language].medicationDeleted);
                         } catch (error) {
-                            Alert.alert('Error', 'Hubo un problema al eliminar el medicamento.');
+                            Alert.alert(translations[language].error, translations[language].errorMessage);
                             console.error(error);
                         }
                     }
@@ -49,6 +51,37 @@ export default function PharmacyDetail({ navigation }) {
             ]
         );
     };
+
+    const translations = {
+        es: {
+            title: 'Detalles de la Farmacia',
+            addMedicationButton: '+ Agregar Medicamento',
+            deleteMedicationTitle: 'Eliminar Medicamento',
+            deleteMedicationMessage: '¿Estás seguro de que deseas eliminar este medicamento?',
+            cancel: 'Cancelar',
+            delete: 'Eliminar',
+            success: 'Éxito',
+            medicationDeleted: 'Medicamento eliminado correctamente.',
+            error: 'Error',
+            errorMessage: 'Hubo un problema al eliminar el medicamento.',
+            edit: 'Editar', // Traducción para "Editar"
+        },
+        en: {
+            title: 'Pharmacy Details',
+            addMedicationButton: '+ Add Medication',
+            deleteMedicationTitle: 'Delete Medication',
+            deleteMedicationMessage: 'Are you sure you want to delete this medication?',
+            cancel: 'Cancel',
+            delete: 'Delete',
+            success: 'Success',
+            medicationDeleted: 'Medication deleted successfully.',
+            error: 'Error',
+            errorMessage: 'There was a problem deleting the medication.',
+            edit: 'Edit', // Traducción para "Edit"
+        }
+    };
+
+    const t = translations[language]; // Obtener las traducciones según el idioma actual
 
     return (
         <View style={styles.container}>
@@ -69,13 +102,13 @@ export default function PharmacyDetail({ navigation }) {
                                     medicationPrice: item.price,
                                 })}
                             >
-                                <Text style={styles.actionText}>Editar</Text>
+                                <Text style={styles.actionText}>{t.edit}</Text> {/* Aquí se usa la traducción */}
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.deleteButton]}
                                 onPress={() => handleDeleteMedication(item.id)}
                             >
-                                <Text style={styles.actionText}>Eliminar</Text>
+                                <Text style={styles.actionText}>{t.delete}</Text> {/* Aquí se usa la traducción */}
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -83,12 +116,12 @@ export default function PharmacyDetail({ navigation }) {
                 keyExtractor={(item) => item.id}
                 ListHeaderComponent={
                     <View style={styles.header}>
-                        <Text style={styles.title}>Pharmacy Detail</Text>
+                        <Text style={styles.title}>{t.title}</Text> {/* Aquí se usa la traducción */}
                         <TouchableOpacity
                             style={styles.addButton}
                             onPress={() => navigation.navigate('AddPharmacyScreen')}
                         >
-                            <Text style={styles.addButtonText}>+ Agregar Medicamento</Text>
+                            <Text style={styles.addButtonText}>{t.addMedicationButton}</Text> {/* Aquí se usa la traducción */}
                         </TouchableOpacity>
                     </View>
                 }

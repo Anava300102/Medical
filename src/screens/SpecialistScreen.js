@@ -10,9 +10,7 @@ export default function SpecialistScreen({ navigation }) {
       specialist: 'Especialista',
       expertise: 'Experto en:',
       price: 'Precio',
-      services: 'Servicios',
       appointmentsOrders: 'Citas/Pedidos',
-      datebook: 'Agenda',
       specialists: [
         {
           id: '1',
@@ -34,9 +32,7 @@ export default function SpecialistScreen({ navigation }) {
       specialist: 'Specialist',
       expertise: 'Expert in:',
       price: 'Price',
-      services: 'Services',
       appointmentsOrders: 'Appointments/Orders',
-      datebook: 'Datebook',
       specialists: [
         {
           id: '1',
@@ -99,10 +95,6 @@ export default function SpecialistScreen({ navigation }) {
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
-          <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.services}</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => navigation.navigate('AppointmentsOrders', { appointments })}
@@ -112,13 +104,6 @@ export default function SpecialistScreen({ navigation }) {
             style={styles.navIcon}
           />
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
-          <Image
-            source={require('../../assets/icons8-comprobante-de-pago-64.png')}
-            style={styles.navIcon}
-          />
-          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>
