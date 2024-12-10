@@ -133,7 +133,6 @@ export default function RegisterScreen({ navigation }) {
           </TouchableOpacity>
 
           <View style={styles.loginLinkContainer}>
-            <Text style={styles.loginText}>{t.loginRedirect}</Text>
             <TouchableOpacity onPress={handleLoginRedirect}>
               <Text style={styles.loginLink}>{t.loginRedirect}</Text>
             </TouchableOpacity>

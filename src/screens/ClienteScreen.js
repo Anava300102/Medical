@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useLanguage } from '../../Context';
 
 const translations = {
@@ -32,6 +32,10 @@ export default function ClienteScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
       {/* Barra superior */}
       <View style={styles.topBar}>
         <Text style={styles.title}>{t.chooseOption}</Text>
@@ -54,6 +58,7 @@ export default function ClienteScreen({ navigation }) {
           onPress={() => navigation.navigate('AppointmentsOrders')}
         />
       </View>
+      </ScrollView>
     </View>
   );
 }

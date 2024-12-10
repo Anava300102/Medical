@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { useLanguage } from '../../Context';
 
 export default function ProductsPharmacyScreen({ navigation }) {
@@ -69,6 +69,10 @@ export default function ProductsPharmacyScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
       {/* Barra superior sin goBack */}
       <View style={styles.topBar}>
         <Text style={styles.title}>{t.pharmacy}</Text>
@@ -121,6 +125,7 @@ export default function ProductsPharmacyScreen({ navigation }) {
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </View>
   );
 }

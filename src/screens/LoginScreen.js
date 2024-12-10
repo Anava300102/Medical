@@ -7,7 +7,7 @@ import { auth } from '../../credenciales';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-// Inicializamos Firestore
+
 const db = getFirestore();
 
 export default function LoginScreen({ navigation }) {
