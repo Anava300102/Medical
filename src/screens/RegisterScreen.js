@@ -49,6 +49,7 @@ export default function RegisterScreen({ navigation }) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const { user } = userCredential;
 
+      // Info firebase
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         role: "user",
@@ -57,7 +58,11 @@ export default function RegisterScreen({ navigation }) {
       });
 
       Alert.alert('Success', t.registerSuccess || 'Registration successful.');
-      navigation.navigate('Cliente');
+
+      navigation.reset({
+        index: 0, 
+        routes: [{ name: 'Cliente' }], 
+      });
     } catch (error) {
       Alert.alert('Error', t.registerError || 'An error occurred. Please try again.');
     }
