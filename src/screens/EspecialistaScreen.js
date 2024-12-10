@@ -42,12 +42,19 @@ export default function EspecialistaScreen({ navigation }) {
         contentContainerStyle={styles.listContainer}
       />
 
-      <TouchableOpacity style={styles.footerButton}>
-        <Image
-          source={require('../../assets/icons8-historial-de-pedidos-50.png')} 
-          style={styles.footerIcon}
-        />
-      </TouchableOpacity>
+      {/* Barra de navegación inferior */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('AppointmentsOrders')}
+        >
+          <Image
+            source={require('../../assets/icons8-historial-de-pedidos-50.png')}
+            style={styles.navIcon}
+          />
+          <Text style={styles.navText}>Appointments/Orders</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -100,22 +107,29 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
   },
-  footerButton: {
+  bottomBar: {
     position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
     backgroundColor: '#fff',
-    borderRadius: 50,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
   },
-  footerIcon: {
-    width: 50,
-    height: 50,
+  navItem: {
+    alignItems: 'center',
+  },
+  navIcon: {
+    width: 24,
+    height: 24,
     resizeMode: 'contain',
+  },
+  navText: {
+    fontSize: 12,
+    color: '#07DBEB',
+    marginTop: 5,
   },
 });

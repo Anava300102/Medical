@@ -10,14 +10,12 @@ export default function VisitScreen({ navigation }) {
       selectDoctor: 'Selecciona un tipo de Doctor',
       generalDoctor: 'Médico General',
       specialist: 'Especialista',
-      services: 'Servicios',
       appointmentsOrders: 'Citas/Pedidos',
     },
     en: {
       selectDoctor: 'Select a type of Doctor',
       generalDoctor: 'General Doctor',
       specialist: 'Specialist',
-      services: 'Services',
       appointmentsOrders: 'Appointments/Orders',
     },
   };
@@ -37,10 +35,13 @@ export default function VisitScreen({ navigation }) {
     <View style={styles.container}>
       {/* Barra superior */}
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../assets/icons8-menú-50.png')} style={styles.icon} />
-        </TouchableOpacity>
         <Text style={styles.title}>{t.selectDoctor}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Image
+            source={require('../../assets/icons8-nombre-50.png')}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
       </View>
 
       {/* Opciones principales */}
@@ -67,12 +68,8 @@ export default function VisitScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Barra de navegación inferior */}
+      {/* Barra inferior de navegación */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
-          <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.services}</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => navigation.navigate('AppointmentsOrders')}
@@ -95,22 +92,22 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
-  icon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-    marginRight: 10,
-  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
   },
   optionsContainer: {
     flex: 1,

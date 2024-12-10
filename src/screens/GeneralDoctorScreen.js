@@ -11,9 +11,7 @@ export default function GeneralDoctor({ navigation }) {
       phone: 'Teléfono',
       email: 'Correo Electrónico',
       price: 'Precio',
-      services: 'Servicios',
       appointmentsOrders: 'Citas/Pedidos',
-      datebook: 'Agenda',
       doctors: [
         {
           id: '1',
@@ -38,9 +36,7 @@ export default function GeneralDoctor({ navigation }) {
       phone: 'Phone',
       email: 'Email',
       price: 'Price',
-      services: 'Services',
       appointmentsOrders: 'Appointments/Orders',
-      datebook: 'Datebook',
       doctors: [
         {
           id: '1',
@@ -93,7 +89,10 @@ export default function GeneralDoctor({ navigation }) {
       <View style={styles.topBar}>
         <Text style={styles.title}>{t.generalDoctor}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Image source={require('../../assets/icons8-nombre-50.png')} style={styles.icon} />
+          <Image
+            source={require('../../assets/icons8-nombre-50.png')}
+            style={styles.icon}
+          />
         </TouchableOpacity>
       </View>
 
@@ -107,10 +106,6 @@ export default function GeneralDoctor({ navigation }) {
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
-          <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.services}</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => navigation.navigate('AppointmentsOrders', { appointments })}
@@ -120,10 +115,6 @@ export default function GeneralDoctor({ navigation }) {
             style={styles.navIcon}
           />
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
-          <Image source={require('../../assets/icons8-comprobante-de-pago-64.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -137,8 +128,8 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderBottomWidth: 1,
@@ -150,8 +141,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
     resizeMode: 'contain',
   },
   listContainer: {

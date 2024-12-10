@@ -2,37 +2,32 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useLanguage } from '../../Context';
 
+const translations = {
+  es: {
+    chooseOption: 'Elige una opción',
+    visit: 'Visita',
+    pharmacy: 'Farmacia',
+    appointmentsOrders: 'Citas/Pedidos',
+  },
+  en: {
+    chooseOption: 'Choose an option',
+    visit: 'Visit',
+    pharmacy: 'Pharmacy',
+    appointmentsOrders: 'Appointments/Orders',
+  },
+};
+
 export default function ClienteScreen({ navigation }) {
   const { language } = useLanguage();
-
-  const translations = {
-    es: {
-      chooseOption: 'Elige una opción',
-      visit: 'Visita',
-      pharmacy: 'Farmacia',
-      services: 'Servicios',
-      appointmentsOrders: 'Citas/Pedidos',
-      datebook: 'Agenda',
-    },
-    en: {
-      chooseOption: 'Choose an option',
-      visit: 'Visit',
-      pharmacy: 'Pharmacy',
-      services: 'Services',
-      appointmentsOrders: 'Appointments/Orders',
-      datebook: 'Datebook',
-    },
-  };
-
   const t = translations[language];
 
   const handleOptionSelection = (option) => {
     console.log(`Selected: ${option}`);
-    if (option === 'Visit') {
-      navigation.navigate('VisitScreen'); // Asegúrate de registrar VisitScreen
-    } else if (option === 'Pharmacy') {
-      navigation.navigate('PharmacyScreen'); // Asegúrate de registrar PharmacyScreen
-    }
+    const screens = {
+      Visit: 'VisitScreen',
+      Pharmacy: 'PharmacyScreen',
+    };
+    navigation.navigate(screens[option]);
   };
 
   return (
@@ -47,44 +42,37 @@ export default function ClienteScreen({ navigation }) {
 
       {/* Opciones principales */}
       <View style={styles.optionsContainer}>
-        <TouchableOpacity
-          style={styles.optionCard}
-          onPress={() => handleOptionSelection('Visit')}
-        >
-          <Image
-            source={require('../../assets/ImagenVisita.png')} 
-            style={styles.optionImage}
-          />
-          <Text style={styles.optionText}>{t.visit}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.optionCard}
-          onPress={() => handleOptionSelection('Pharmacy')}
-        >
-          <Image
-            source={require('../../assets/ImagenFarmacia.png')} 
-            style={styles.optionImage}
-          />
-          <Text style={styles.optionText}>{t.pharmacy}</Text>
-        </TouchableOpacity>
+        <OptionCard image={require('../../assets/ImagenVisita.png')} text={t.visit} onPress={() => handleOptionSelection('Visit')} />
+        <OptionCard image={require('../../assets/ImagenFarmacia.png')} text={t.pharmacy} onPress={() => handleOptionSelection('Pharmacy')} />
       </View>
 
-      {/* Barra de navegación inferior */}
+      
       <View style={styles.bottomBar}>
-        <TouchableOpacity
-          style={styles.navItem}
+        <NavItem
+          image={require('../../assets/icons8-historial-de-pedidos-50.png')}
+          text={t.appointmentsOrders}
           onPress={() => navigation.navigate('AppointmentsOrders')}
-        >
-          <Image
-            source={require('../../assets/icons8-historial-de-pedidos-50.png')}
-            style={styles.navIcon}
-          />
-          <Text style={styles.navText}>{t.appointmentsOrders}</Text>
-        </TouchableOpacity>
+        />
       </View>
     </View>
   );
 }
+
+
+const OptionCard = ({ image, text, onPress }) => (
+  <TouchableOpacity style={styles.optionCard} onPress={onPress}>
+    <Image source={image} style={styles.optionImage} />
+    <Text style={styles.optionText}>{text}</Text>
+  </TouchableOpacity>
+);
+
+//  navegación inferior
+const NavItem = ({ image, text, onPress }) => (
+  <TouchableOpacity style={styles.navItem} onPress={onPress}>
+    <Image source={image} style={styles.navIcon} />
+    <Text style={styles.navText}>{text}</Text>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   container: {
