@@ -20,6 +20,10 @@ import ConfirmAppointmentScreen from './src/screens/ConfirmAppointmentScreen';
 import GeneralDoctorDetail from './src/screens/GeneralDoctorDetail';
 import PharmacyDetail from './src/screens/PharmacyDetail';
 import SpecialistDetail from './src/screens/SpecialistDetail';
+import AddDoctorScreen from './src/screens/AddDoctorScreen';
+import EditDoctorScreen from './src/screens/EditDoctorScreen';
+import AddSpecialistScreen from './src/screens/AddSpecialistScreen';
+import EditSpecialistScreen from './src/screens/EditSpecialistScreen';
 import { LanguageProvider } from './Context';
 import { OrientationProvider } from './OrientationProvider';
 
@@ -51,6 +55,10 @@ export default function App() {
             <Stack.Screen name="SpecialistDetail" component={SpecialistDetail} />
             <Stack.Screen name="GeneralDoctorDetail" component={GeneralDoctorDetail} />
             <Stack.Screen name="PharmacyDetail" component={PharmacyDetail} />
+            <Stack.Screen name="AddDoctorScreen" component={AddDoctorScreen} />
+            <Stack.Screen name="EditDoctorScreen" component={EditDoctorScreen} />
+            <Stack.Screen name="AddSpecialistScreen" component={AddSpecialistScreen} />
+            <Stack.Screen name="EditSpecialistScreen" component={EditSpecialistScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </LanguageProvider>
