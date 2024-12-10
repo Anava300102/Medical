@@ -39,9 +39,6 @@ export default function ClienteScreen({ navigation }) {
     <View style={styles.container}>
       {/* Barra superior */}
       <View style={styles.topBar}>
-        <TouchableOpacity>
-          <Image source={require('../../assets/icons8-menú-50.png')} style={styles.icon} />
-        </TouchableOpacity>
         <Text style={styles.title}>{t.chooseOption}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image source={require('../../assets/icons8-nombre-50.png')} style={styles.icon} />
@@ -74,10 +71,6 @@ export default function ClienteScreen({ navigation }) {
 
       {/* Barra de navegación inferior */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Services')}>
-          <Image source={require('../../assets/icons8-servicios-50.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.services}</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => navigation.navigate('AppointmentsOrders')}
@@ -87,10 +80,6 @@ export default function ClienteScreen({ navigation }) {
             style={styles.navIcon}
           />
           <Text style={styles.navText}>{t.appointmentsOrders}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Datebook')}>
-          <Image source={require('../../assets/icons8-comprobante-de-pago-64.png')} style={styles.navIcon} />
-          <Text style={styles.navText}>{t.datebook}</Text>
         </TouchableOpacity>
       </View>
     </View>
