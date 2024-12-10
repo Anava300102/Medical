@@ -13,6 +13,7 @@ const db = getFirestore();
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const { language, changeLanguage } = useLanguage();
   const { orientation } = useOrientation();
 
@@ -48,27 +49,24 @@ export default function LoginScreen({ navigation }) {
       return;
     }
     try {
-      // Inicia sesión con Firebase Authentication
       await signInWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
 
-      // Si el inicio de sesión es exitoso, obtenemos el UID
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const userData = docSnap.data();
 
-        // Comprobamos el rol del usuario
         if (userData.role === 'admin') {
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Services' }], // Redirige a la pantalla de servicios si es admin
+            routes: [{ name: 'Services' }],
           });
         } else {
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Cliente' }], // Redirige a la pantalla cliente si es usuario normal
+            routes: [{ name: 'Cliente' }],
           });
         }
       } else {
@@ -91,7 +89,6 @@ export default function LoginScreen({ navigation }) {
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Botones para cambiar idioma */}
         <View style={styles.languageButtons}>
           <TouchableOpacity
             style={[styles.languageButton, language === 'es' && styles.activeLanguageButton]}
@@ -107,13 +104,11 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Imagen en la parte superior */}
         <Image
-          source={require('../../assets/Home.png')} // Asegúrate de que esta ruta sea correcta
+          source={require('../../assets/Home.png')}
           style={styles.image}
         />
 
-        {/* Parte inferior con fondo blanco */}
         <View style={styles.formContainer}>
           <Text style={styles.title}>{t.loginTitle}</Text>
 
@@ -132,10 +127,17 @@ export default function LoginScreen({ navigation }) {
             <TextInput
               style={styles.input}
               placeholder={t.passwordPlaceholder}
-              secureTextEntry
+              secureTextEntry={!showPassword}
               value={password}
               onChangeText={setPassword}
             />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Ionicons
+                name={showPassword ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color="#07DBEB"
+              />
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
